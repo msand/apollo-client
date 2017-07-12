@@ -123,7 +123,7 @@ export class HTTPBatchedNetworkInterface extends BaseNetworkInterface {
               options: batchRequestAndOptions.options,
             }).then((responseAndOptions: BatchResponseAndOptions) => {
               // In a batch response, the response is actually an Array of responses, refine it.
-              resolve(responseAndOptions.responses);
+              resolve(responseAndOptions);
             }).catch((error: Error) => {
               reject(error);
             });

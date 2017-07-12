@@ -1,4 +1,8 @@
 import {
+  ExecutionResult,
+} from 'graphql';
+
+import {
   ModifiableWatchQueryOptions,
   WatchQueryOptions,
   FetchMoreQueryOptions,
@@ -224,7 +228,7 @@ export class ObservableQuery<T> extends Observable<ApolloQueryResult<T>> {
 
   public fetchMore(
     fetchMoreOptions: FetchMoreQueryOptions & FetchMoreOptions,
-  ): Promise<ApolloQueryResult<T>> {
+  ): Promise<ApolloCurrentResult<T>> {
     if (!fetchMoreOptions.updateQuery) {
       throw new Error('updateQuery option is required. This function defines how to update the query data with the new results.');
     }
@@ -272,7 +276,7 @@ export class ObservableQuery<T> extends Observable<ApolloQueryResult<T>> {
             });
         };
         this.updateQuery(mapFn);
-        return fetchMoreResult;
+        return fetchMoreResult as ApolloCurrentResult<T>;
       });
   }
 
