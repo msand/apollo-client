@@ -3,9 +3,9 @@ import {
   ApolloClient,
   ApolloLink,
   DocumentTransform,
-  InMemoryCache,
   gql,
 } from "../../../core";
+import { Hermes } from "apollo-cache-hermes";
 import { createPersistedQueryLink } from "../../../link/persisted-queries";
 import { removeTypenameFromVariables } from "../../../link/remove-typename";
 import crypto from "crypto";
@@ -53,7 +53,7 @@ it("returns information about cache usage (empty caches)", () => {
         cache: true,
       })
     ),
-    cache: new InMemoryCache({
+    cache: new Hermes({
       fragments: createFragmentRegistry(),
     }),
     link: createPersistedQueryLink({
@@ -122,7 +122,7 @@ it("returns information about cache usage (some query triggered)", () => {
         cache: true,
       })
     ),
-    cache: new InMemoryCache({
+    cache: new Hermes({
       fragments: createFragmentRegistry(),
     }),
     link: createPersistedQueryLink({
@@ -192,7 +192,7 @@ it("returns information about cache usage (some query triggered)", () => {
 
 it("reports user-declared cacheSizes", () => {
   const client = new ApolloClient({
-    cache: new InMemoryCache({}),
+    cache: new Hermes({}),
   });
 
   cacheSizes["inMemoryCache.executeSubSelectedArray"] = 90;

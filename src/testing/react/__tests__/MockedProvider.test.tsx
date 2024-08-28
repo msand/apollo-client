@@ -6,7 +6,7 @@ import gql from "graphql-tag";
 import { itAsync, MockedResponse, MockLink } from "../../core";
 import { MockedProvider } from "../MockedProvider";
 import { useQuery } from "../../../react/hooks";
-import { InMemoryCache } from "../../../cache";
+import { Hermes } from "apollo-cache-hermes";
 import { QueryResult } from "../../../react/types/types";
 import { ApolloLink, FetchResult } from "../../../link/core";
 import { Observable } from "zen-observable-ts";
@@ -232,7 +232,7 @@ describe("General use", () => {
 
   itAsync("should allow using a custom cache", (resolve, reject) => {
     let finished = false;
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     cache.writeQuery({
       query,
       variables,
@@ -1228,7 +1228,7 @@ describe("@client testing", () => {
     "should support @client fields with a custom cache",
     (resolve, reject) => {
       let finished = false;
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       cache.writeQuery({
         query: gql`
@@ -1278,7 +1278,7 @@ describe("@client testing", () => {
     "should support @client fields with field policies",
     (resolve, reject) => {
       let finished = false;
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {

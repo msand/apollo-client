@@ -4,15 +4,15 @@ import {
   DiffQueryAgainstStoreOptions,
 } from "../types";
 import { EntityStore } from "../entityStore";
-import { InMemoryCache } from "../inMemoryCache";
 import { StoreReader } from "../readFromStore";
 import { StoreWriter } from "../writeToStore";
 import { Cache } from "../../../core";
+import { Hermes } from "apollo-cache-hermes";
 
 export function defaultNormalizedCacheFactory(
   seed?: NormalizedCacheObject
 ): NormalizedCache {
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
   return new EntityStore.Root({
     policies: cache.policies,
     resultCaching: true,

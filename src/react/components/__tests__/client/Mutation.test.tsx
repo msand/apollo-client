@@ -10,7 +10,7 @@ import { render, screen, waitFor, act } from "@testing-library/react";
 
 import { ApolloClient } from "../../../../core";
 import { ApolloError } from "../../../../errors";
-import { DataProxy, InMemoryCache as Cache } from "../../../../cache";
+import { DataProxy } from "../../../../cache";
 import { ApolloProvider } from "../../../context";
 import {
   itAsync,
@@ -20,6 +20,7 @@ import {
 } from "../../../../testing";
 import { Query } from "../../Query";
 import { Mutation } from "../../Mutation";
+import { Hermes as Cache } from "apollo-cache-hermes";
 
 const mutation = gql`
   mutation createTodo($text: String!) {

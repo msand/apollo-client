@@ -1,6 +1,6 @@
 // externals
 import gql from "graphql-tag";
-import { InMemoryCache } from "../../../cache/inmemory/inMemoryCache";
+import { Hermes } from "apollo-cache-hermes";
 
 // mocks
 import { itAsync, MockSubscriptionLink } from "../../../testing/core";
@@ -40,7 +40,7 @@ describe("mutiple results", () => {
     const link = new MockSubscriptionLink();
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
         link,
       })
     );
@@ -101,7 +101,7 @@ describe("mutiple results", () => {
       const link = new MockSubscriptionLink();
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           link,
         })
       );
@@ -173,7 +173,7 @@ describe("mutiple results", () => {
     const link = new MockSubscriptionLink();
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
         link,
       })
     );
@@ -251,7 +251,7 @@ describe("mutiple results", () => {
       const link = new MockSubscriptionLink();
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           link,
         })
       );
@@ -324,7 +324,7 @@ describe("mutiple results", () => {
       const link = new MockSubscriptionLink();
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           link,
         })
       );

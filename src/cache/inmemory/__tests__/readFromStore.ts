@@ -1,7 +1,7 @@
 import { assign, omit } from "lodash";
 import gql from "graphql-tag";
 
-import { InMemoryCache } from "../inMemoryCache";
+import { Hermes } from "apollo-cache-hermes";
 import { StoreObject } from "../types";
 import { StoreReader } from "../readFromStore";
 import { Cache } from "../../core/types/Cache";
@@ -20,7 +20,7 @@ import {
 import { defaultCacheSizes } from "../../../utilities";
 
 describe("resultCacheMaxSize", () => {
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   it("uses default max size on caches if resultCacheMaxSize is not configured", () => {
     const reader = new StoreReader({ cache });
@@ -38,7 +38,7 @@ describe("resultCacheMaxSize", () => {
 
 describe("reading from the store", () => {
   const reader = new StoreReader({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
   });
 
   it("runs a nested query with proper fragment fields in arrays", () => {
@@ -562,7 +562,7 @@ describe("reading from the store", () => {
 
   it("runs a nested query - skips iterating into an empty array", () => {
     const reader = new StoreReader({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const result = {
@@ -647,7 +647,7 @@ describe("reading from the store", () => {
   });
 
   it("readQuery supports returnPartialData", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const aQuery = gql`
       query {
         a
@@ -689,7 +689,7 @@ describe("reading from the store", () => {
   });
 
   it("readFragment supports returnPartialData", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const id = cache.identify({
       __typename: "ABObject",
       id: 321,
@@ -777,7 +777,7 @@ describe("reading from the store", () => {
       }
     `;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1057,13 +1057,13 @@ describe("reading from the store", () => {
 
   it("can use keyArgs function instead of @connection directive", () => {
     const reader = new StoreReader({
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Query: {
             fields: {
               books: {
                 // Even though we're returning an arbitrary string here,
-                // the InMemoryCache will ensure the actual key begins
+                // the Hermes will ensure the actual key begins
                 // with "books".
                 keyArgs: () => "abc",
               },
@@ -1202,7 +1202,7 @@ describe("reading from the store", () => {
   });
 
   it("read functions for root query fields work with empty cache", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1265,7 +1265,7 @@ describe("reading from the store", () => {
   });
 
   it("custom read functions can map/filter dangling references", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1524,7 +1524,7 @@ describe("reading from the store", () => {
   });
 
   it("propagates eviction signals to parent queries", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       canonizeResults: true,
       typePolicies: {
         Deity: {
@@ -2023,7 +2023,7 @@ describe("reading from the store", () => {
   });
 
   it("returns === results for different queries", function () {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       canonizeResults: true,
     });
 
@@ -2143,7 +2143,7 @@ describe("reading from the store", () => {
     const now = new Date();
     const abc = { a: 1, b: 2, c: 3 };
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -2195,7 +2195,7 @@ describe("reading from the store", () => {
   it("readQuery can opt out of canonization", function () {
     let count = 0;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -2251,7 +2251,7 @@ describe("reading from the store", () => {
   it("readFragment can opt out of canonization", function () {
     let count = 0;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {

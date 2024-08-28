@@ -6,7 +6,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { ApolloClient, NetworkStatus } from "../../../../core";
 import { ApolloError } from "../../../../errors";
 import { ApolloLink } from "../../../../link/core";
-import { InMemoryCache } from "../../../../cache";
+import { Hermes } from "apollo-cache-hermes";
 import { ApolloProvider } from "../../../context";
 import { itAsync, MockedProvider, mockSingleLink } from "../../../../testing";
 import { Query } from "../../Query";
@@ -50,7 +50,7 @@ describe("Query component", () => {
     });
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     const Component = () => (
@@ -1317,7 +1317,7 @@ describe("Query component", () => {
 
         const client = new ApolloClient({
           link,
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
         });
 
         let count = 0;
@@ -1482,7 +1482,7 @@ describe("Query component", () => {
     );
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     const noop = () => null;
@@ -1606,7 +1606,7 @@ describe("Query component", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       let count = 0;
@@ -1867,7 +1867,7 @@ describe("Query component", () => {
 
         const client = new ApolloClient({
           link,
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
         });
 
         const Component = () => (
@@ -1914,7 +1914,7 @@ describe("Query component", () => {
 
         const client = new ApolloClient({
           link,
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
         });
 
         const Component = () => (
@@ -1977,7 +1977,7 @@ describe("Query component", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       let expectCount = 0;
@@ -2036,7 +2036,7 @@ describe("Query component", () => {
 
     it("should not return partial cache data when `returnPartialData` is false", async () => {
       let finished = false;
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -2108,7 +2108,7 @@ describe("Query component", () => {
 
     it("should return partial cache data when `returnPartialData` is true", async () => {
       let finished = false;
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),

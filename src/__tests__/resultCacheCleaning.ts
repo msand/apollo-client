@@ -1,8 +1,9 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
 
 import { ApolloClient, Resolvers, gql } from "../core";
-import { InMemoryCache, NormalizedCacheObject } from "../cache";
+import { NormalizedCacheObject } from "../cache";
 import { SchemaLink } from "../link/schema";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("resultCache cleaning", () => {
   const fragments = gql`
@@ -139,7 +140,7 @@ describe("resultCache cleaning", () => {
 
   beforeEach(() => {
     client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new SchemaLink({
         schema: makeExecutableSchema({
           typeDefs,
@@ -150,7 +151,7 @@ describe("resultCache cleaning", () => {
   });
 
   afterEach(() => {
-    const storeReader = (client.cache as InMemoryCache)["storeReader"];
+    const storeReader = (client.cache as unknown as Hermes)["storeReader"];
     expect(storeReader["executeSubSelectedArray"].size).toBeGreaterThan(0);
     expect(storeReader["executeSelectionSet"].size).toBeGreaterThan(0);
     client.cache.evict({

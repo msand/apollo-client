@@ -14,7 +14,8 @@ import {
 
 import { QueryManager } from "../core/QueryManager";
 
-import { Cache, InMemoryCache } from "../cache";
+import { Cache } from "../cache";
+import { Hermes } from "apollo-cache-hermes";
 
 import {
   Observable,
@@ -122,7 +123,7 @@ describe("optimistic mutation results", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           TodoList: {
             fields: {
@@ -228,7 +229,7 @@ describe("optimistic mutation results", () => {
               updateQueries,
             });
 
-            const dataInStore = (client.cache as InMemoryCache).extract(true);
+            const dataInStore = (client.cache as Hermes).extract(true);
             expect((dataInStore["TodoList5"] as any).todos.length).toBe(4);
             expect((dataInStore["Todo99"] as any).text).toBe(
               "Optimistically generated"
@@ -238,7 +239,7 @@ describe("optimistic mutation results", () => {
             expect(err).toBeInstanceOf(Error);
             expect((err as Error).message).toBe("forbidden (test error)");
 
-            const dataInStore = (client.cache as InMemoryCache).extract(true);
+            const dataInStore = (client.cache as Hermes).extract(true);
             expect((dataInStore["TodoList5"] as any).todos.length).toBe(3);
             expect(dataInStore).not.toHaveProperty("Todo99");
           }
@@ -293,7 +294,7 @@ describe("optimistic mutation results", () => {
             updateQueries,
           });
 
-          const dataInStore = (client.cache as InMemoryCache).extract(true);
+          const dataInStore = (client.cache as Hermes).extract(true);
           expect((dataInStore["TodoList5"] as any).todos.length).toBe(5);
           expect((dataInStore["Todo99"] as any).text).toBe(
             "Optimistically generated"
@@ -306,7 +307,7 @@ describe("optimistic mutation results", () => {
 
           subscriptionHandle!.unsubscribe();
           {
-            const dataInStore = (client.cache as InMemoryCache).extract(true);
+            const dataInStore = (client.cache as Hermes).extract(true);
             expect((dataInStore["TodoList5"] as any).todos.length).toBe(4);
             expect(dataInStore).not.toHaveProperty("Todo99");
             expect(dataInStore).toHaveProperty("Todo66");
@@ -329,7 +330,7 @@ describe("optimistic mutation results", () => {
             expectedText1: any,
             expectedText2: any
           ) {
-            const dataInStore = (client.cache as InMemoryCache).extract(true);
+            const dataInStore = (client.cache as Hermes).extract(true);
             expect((dataInStore["TodoList5"] as any).todos.length).toBe(5);
             expect(dataInStore).toHaveProperty("Todo99");
             expect(dataInStore).toHaveProperty("Todo66");
@@ -481,7 +482,7 @@ describe("optimistic mutation results", () => {
               update,
             });
 
-            const dataInStore = (client.cache as InMemoryCache).extract(true);
+            const dataInStore = (client.cache as Hermes).extract(true);
             expect((dataInStore["TodoList5"] as any).todos.length).toBe(4);
             expect((dataInStore["Todo99"] as any).text).toBe(
               "Optimistically generated"
@@ -492,7 +493,7 @@ describe("optimistic mutation results", () => {
             expect(err).toBeInstanceOf(Error);
             expect((err as Error).message).toBe("forbidden (test error)");
 
-            const dataInStore = (client.cache as InMemoryCache).extract(true);
+            const dataInStore = (client.cache as Hermes).extract(true);
             expect((dataInStore["TodoList5"] as any).todos.length).toBe(3);
             expect(dataInStore).not.toHaveProperty("Todo99");
           }
@@ -547,7 +548,7 @@ describe("optimistic mutation results", () => {
             update,
           });
 
-          const dataInStore = (client.cache as InMemoryCache).extract(true);
+          const dataInStore = (client.cache as Hermes).extract(true);
           expect((dataInStore["TodoList5"] as any).todos.length).toBe(5);
           expect((dataInStore["Todo99"] as any).text).toBe(
             "Optimistically generated"
@@ -560,7 +561,7 @@ describe("optimistic mutation results", () => {
 
           subscriptionHandle!.unsubscribe();
           {
-            const dataInStore = (client.cache as InMemoryCache).extract(true);
+            const dataInStore = (client.cache as Hermes).extract(true);
             expect((dataInStore["TodoList5"] as any).todos.length).toBe(4);
             expect(dataInStore).not.toHaveProperty("Todo99");
             expect(dataInStore).toHaveProperty("Todo66");
@@ -583,7 +584,7 @@ describe("optimistic mutation results", () => {
             expectedText1: any,
             expectedText2: any
           ) {
-            const dataInStore = (client.cache as InMemoryCache).extract(true);
+            const dataInStore = (client.cache as Hermes).extract(true);
             expect((dataInStore["TodoList5"] as any).todos.length).toBe(5);
             expect(dataInStore).toHaveProperty("Todo99");
             expect(dataInStore).toHaveProperty("Todo66");
@@ -961,7 +962,7 @@ describe("optimistic mutation results", () => {
           },
         });
 
-        const dataInStore = (client.cache as InMemoryCache).extract(true);
+        const dataInStore = (client.cache as Hermes).extract(true);
         expect((dataInStore["TodoList5"] as any).todos.length).toEqual(4);
         expect((dataInStore["Todo99"] as any).text).toEqual(
           "Optimistically generated from variables"
@@ -1101,7 +1102,7 @@ describe("optimistic mutation results", () => {
       `;
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       client.mutate({
@@ -1214,7 +1215,7 @@ describe("optimistic mutation results", () => {
           },
         });
 
-        const dataInStore = (client.cache as InMemoryCache).extract(true);
+        const dataInStore = (client.cache as Hermes).extract(true);
         expect((dataInStore["TodoList5"] as any).todos.length).toEqual(4);
         expect((dataInStore["Todo99"] as any).text).toEqual(
           "Optimistically generated"
@@ -1283,9 +1284,7 @@ describe("optimistic mutation results", () => {
           updateQueries,
         })
         .then((res: any) => {
-          const currentDataInStore = (client.cache as InMemoryCache).extract(
-            true
-          );
+          const currentDataInStore = (client.cache as Hermes).extract(true);
           expect((currentDataInStore["TodoList5"] as any).todos.length).toEqual(
             5
           );
@@ -1304,7 +1303,7 @@ describe("optimistic mutation results", () => {
         updateQueries,
       });
 
-      const dataInStore = (client.cache as InMemoryCache).extract(true);
+      const dataInStore = (client.cache as Hermes).extract(true);
       expect((dataInStore["TodoList5"] as any).todos.length).toEqual(5);
       expect((dataInStore["Todo99"] as any).text).toEqual(
         "Optimistically generated"
@@ -1394,7 +1393,7 @@ describe("optimistic mutation results", () => {
         updateQueries,
       });
 
-      const dataInStore = (client.cache as InMemoryCache).extract(true);
+      const dataInStore = (client.cache as Hermes).extract(true);
       expect((dataInStore["TodoList5"] as any).todos.length).toEqual(5);
       expect((dataInStore["Todo99"] as any).text).toEqual(
         "Optimistically generated"
@@ -1407,7 +1406,7 @@ describe("optimistic mutation results", () => {
 
       subscriptionHandle!.unsubscribe();
       {
-        const dataInStore = (client.cache as InMemoryCache).extract(true);
+        const dataInStore = (client.cache as Hermes).extract(true);
         expect((dataInStore["TodoList5"] as any).todos.length).toEqual(4);
         expect(dataInStore).not.toHaveProperty("Todo99");
         expect(dataInStore).toHaveProperty("Todo66");
@@ -1476,7 +1475,7 @@ describe("optimistic mutation results", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           dataIdFromObject: (obj: any) => {
             if (obj.id && obj.__typename) {
               return obj.__typename + obj.id;
@@ -1646,7 +1645,7 @@ describe("optimistic mutation results", () => {
           },
         });
 
-        const dataInStore = (client.cache as InMemoryCache).extract(true);
+        const dataInStore = (client.cache as Hermes).extract(true);
         expect((dataInStore["TodoList5"] as any).todos.length).toBe(4);
         expect((dataInStore["Todo99"] as any).text).toBe(
           "Optimistically generated"
@@ -1733,9 +1732,7 @@ describe("optimistic mutation results", () => {
           update,
         })
         .then((res: any) => {
-          const currentDataInStore = (client.cache as InMemoryCache).extract(
-            true
-          );
+          const currentDataInStore = (client.cache as Hermes).extract(true);
           expect((currentDataInStore["TodoList5"] as any).todos.length).toBe(5);
           expect((currentDataInStore["Todo99"] as any).text).toBe(
             "This one was created with a mutation."
@@ -1752,7 +1749,7 @@ describe("optimistic mutation results", () => {
         update,
       });
 
-      const dataInStore = (client.cache as InMemoryCache).extract(true);
+      const dataInStore = (client.cache as Hermes).extract(true);
       expect((dataInStore["TodoList5"] as any).todos.length).toBe(5);
       expect((dataInStore["Todo99"] as any).text).toBe(
         "Optimistically generated"
@@ -1862,7 +1859,7 @@ describe("optimistic mutation results", () => {
         update,
       });
 
-      const dataInStore = (client.cache as InMemoryCache).extract(true);
+      const dataInStore = (client.cache as Hermes).extract(true);
       expect((dataInStore["TodoList5"] as any).todos.length).toBe(5);
       expect((dataInStore["Todo99"] as any).text).toBe(
         "Optimistically generated"
@@ -1875,7 +1872,7 @@ describe("optimistic mutation results", () => {
 
       subscriptionHandle!.unsubscribe();
       {
-        const dataInStore = (client.cache as InMemoryCache).extract(true);
+        const dataInStore = (client.cache as Hermes).extract(true);
         expect((dataInStore["TodoList5"] as any).todos.length).toBe(4);
         expect(dataInStore).not.toHaveProperty("Todo99");
         expect(dataInStore).toHaveProperty("Todo66");
@@ -1961,7 +1958,7 @@ describe("optimistic mutation results", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           dataIdFromObject: (obj: any) => {
             if (obj.id && obj.__typename) {
               return obj.__typename + obj.id;
@@ -2021,7 +2018,7 @@ describe("optimistic mutation results", () => {
     });
 
     itAsync("final update ignores optimistic data", (resolve, reject) => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: new ApolloLink(
@@ -2427,7 +2424,7 @@ describe("optimistic mutation - githunt comments", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         dataIdFromObject: (obj: any) => {
           if (obj.id && obj.__typename) {
             return obj.__typename + obj.id;

@@ -4,17 +4,17 @@ import { itAsync } from "../testing";
 import {
   ApolloClient,
   ApolloLink,
-  InMemoryCache,
   gql,
   Observable,
   TypedDocumentNode,
   ObservableQuery,
 } from "../core";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("client.refetchQueries", () => {
   itAsync("is public and callable", (resolve, reject) => {
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
     expect(typeof client.refetchQueries).toBe("function");
 
@@ -57,7 +57,7 @@ describe("client.refetchQueries", () => {
 
   function makeClient() {
     return new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink(
         (operation) =>
           new Observable((observer) => {

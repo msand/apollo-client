@@ -1,11 +1,12 @@
-import { ApolloClient, InMemoryCache, gql } from "../../core";
+import { ApolloClient, gql } from "../../core";
+import { Hermes } from "apollo-cache-hermes";
 
 /**
  * Creates an apollo-client instance with a local query resolver named 'localQuery'.
  * @param localQueryResolver resolver function to run for "localQuery" query.
  */
 const setupClientWithLocalQueryResolver = (localQueryResolver: any) => {
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   const resolvers = {
     Query: { localQuery: localQueryResolver },

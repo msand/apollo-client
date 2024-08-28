@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 
 import { MockSubscriptionLink } from "../../core";
 import { ApolloClient } from "../../../core";
-import { InMemoryCache as Cache } from "../../../cache";
+import { Hermes as Cache } from "apollo-cache-hermes";
 import { ApolloProvider } from "../../../react/context";
 import { useSubscription } from "../../../react/hooks";
 

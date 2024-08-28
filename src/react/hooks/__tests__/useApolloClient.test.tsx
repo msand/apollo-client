@@ -5,13 +5,13 @@ import { InvariantError } from "ts-invariant";
 import { ApolloClient } from "../../../core";
 import { ApolloLink } from "../../../link/core";
 import { ApolloProvider } from "../../context";
-import { InMemoryCache } from "../../../cache";
+import { Hermes } from "apollo-cache-hermes";
 import { useApolloClient } from "../useApolloClient";
 
 describe("useApolloClient Hook", () => {
   it("should return a client instance from the context if available", () => {
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: ApolloLink.empty(),
     });
 

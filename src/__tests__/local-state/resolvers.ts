@@ -11,12 +11,13 @@ import {
   WatchQueryOptions,
 } from "../../core";
 
-import { InMemoryCache, isReference } from "../../cache";
+import { isReference } from "../../cache";
 import { Observable, Observer } from "../../utilities";
 import { ApolloLink } from "../../link/core";
 import { itAsync } from "../../testing";
 import mockQueryManager from "../../testing/core/mocking/mockQueryManager";
 import wrap from "../../testing/core/wrap";
+import { Hermes } from "apollo-cache-hermes";
 
 // Helper method that sets up a mockQueryManager and then passes on the
 // results to an observer.
@@ -424,7 +425,7 @@ describe("Basic resolver capabilities", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       cache.writeQuery({ query, data: { isInCart: true } });
 
       const client = new ApolloClient({
@@ -487,7 +488,7 @@ describe("Basic resolver capabilities", () => {
     const commentsPerTicket = 5;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       resolvers: {
         Query: {
           async developer(_, { id }) {
@@ -637,7 +638,7 @@ describe("Writing cache data from resolvers", () => {
     `;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: ApolloLink.empty(),
       resolvers: {
         Mutation: {
@@ -672,7 +673,7 @@ describe("Writing cache data from resolvers", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const client = new ApolloClient({
       cache,
@@ -729,7 +730,7 @@ describe("Writing cache data from resolvers", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const client = new ApolloClient({
       cache,
@@ -799,7 +800,7 @@ describe("Resolving field aliases", () => {
       );
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
         resolvers: {
           Query: {
@@ -836,7 +837,7 @@ describe("Resolving field aliases", () => {
       `;
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: ApolloLink.empty(),
         resolvers: {
           Query: {
@@ -877,7 +878,7 @@ describe("Resolving field aliases", () => {
       );
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
         resolvers: {
           Query: {
@@ -914,7 +915,7 @@ describe("Resolving field aliases", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -974,7 +975,7 @@ describe("Resolving field aliases", () => {
       );
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
         resolvers: {
           Launch: {
@@ -1033,7 +1034,7 @@ describe("Force local resolvers", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -1098,7 +1099,7 @@ describe("Force local resolvers", () => {
 
       let count = 0;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
         resolvers: {
           Author: {
@@ -1130,7 +1131,7 @@ describe("Force local resolvers", () => {
       let nameCount = 0;
       let isLoggedInCount = 0;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         resolvers: {
           Query: {
             name() {
@@ -1176,7 +1177,7 @@ describe("Force local resolvers", () => {
 
       let callCount = 0;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         resolvers: {
           Query: {
             isUserLoggedIn() {
@@ -1222,7 +1223,7 @@ describe("Force local resolvers", () => {
     `;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       resolvers: {
         Query: {
           userData() {
@@ -1263,7 +1264,7 @@ describe("Async resolvers", () => {
     `;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       resolvers: {
         Query: {
           isLoggedIn() {
@@ -1311,7 +1312,7 @@ describe("Async resolvers", () => {
       );
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
         resolvers: {
           Member: {
@@ -1342,7 +1343,7 @@ describe("LocalState helpers", () => {
       "should return true if the document contains any @client directives " +
         "with an `always` variable of true",
       () => {
-        const localState = new LocalState({ cache: new InMemoryCache() });
+        const localState = new LocalState({ cache: new Hermes() });
         const query = gql`
           query Author {
             name
@@ -1357,7 +1358,7 @@ describe("LocalState helpers", () => {
       "should return false if the document contains any @client directives " +
         "without an `always` variable",
       () => {
-        const localState = new LocalState({ cache: new InMemoryCache() });
+        const localState = new LocalState({ cache: new Hermes() });
         const query = gql`
           query Author {
             name
@@ -1372,7 +1373,7 @@ describe("LocalState helpers", () => {
       "should return false if the document contains any @client directives " +
         "with an `always` variable of false",
       () => {
-        const localState = new LocalState({ cache: new InMemoryCache() });
+        const localState = new LocalState({ cache: new Hermes() });
         const query = gql`
           query Author {
             name

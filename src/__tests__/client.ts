@@ -28,13 +28,9 @@ import {
   removeDirectivesFromDocument,
 } from "../utilities";
 import { ApolloLink } from "../link/core";
-import {
-  createFragmentRegistry,
-  InMemoryCache,
-  makeVar,
-  PossibleTypesMap,
-} from "../cache";
+import { createFragmentRegistry, makeVar, PossibleTypesMap } from "../cache";
 import { ApolloError } from "../errors";
+import { Hermes } from "apollo-cache-hermes";
 
 import {
   itAsync,
@@ -54,7 +50,7 @@ describe("client", () => {
 
     const client = new ApolloClientRequire({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     expect(client.queryManager).toBeDefined();
@@ -65,7 +61,7 @@ describe("client", () => {
     const link = ApolloLink.empty();
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     expect(client.link).toBeInstanceOf(ApolloLink);
@@ -74,7 +70,7 @@ describe("client", () => {
   it('should throw an error if query option is missing or not wrapped with a "gql" tag', () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     expect(() => {
@@ -96,7 +92,7 @@ describe("client", () => {
   it("should throw an error if mutation option is missing", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     return await expect(
@@ -176,7 +172,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       client.query({ query, variables }).then((actualResult) => {
@@ -225,7 +221,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const basic = client.query({ query, variables }).then((actualResult) => {
@@ -292,7 +288,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const basic = client.query({ query, variables }).then((actualResult) => {
@@ -455,18 +451,14 @@ describe("client", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }).restore(
-        initialState.data
-      ),
+      cache: new Hermes({ addTypename: false }).restore(initialState.data),
     });
 
     return client
       .query({ query })
       .then((result) => {
         expect(result.data).toEqual(data);
-        expect(finalState.data).toEqual(
-          (client.cache as InMemoryCache).extract()
-        );
+        expect(finalState.data).toEqual((client.cache as Hermes).extract());
       })
       .then(resolve, reject);
   });
@@ -518,9 +510,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }).restore(
-          initialState.data
-        ),
+        cache: new Hermes({ addTypename: false }).restore(initialState.data),
       });
 
       return client
@@ -588,9 +578,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }).restore(
-          initialState.data
-        ),
+        cache: new Hermes({ addTypename: false }).restore(initialState.data),
       });
 
       expect(client.restore(initialState.data)).toEqual(
@@ -627,7 +615,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       return client
@@ -678,7 +666,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       client.query({ query }).catch((error: ApolloError) => {
@@ -713,7 +701,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       client.query({ query }).catch((error: ApolloError) => {
@@ -749,7 +737,7 @@ describe("client", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return client.query({ query }).then((result: FormattedExecutionResult) => {
@@ -804,7 +792,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const handle = client.watchQuery({ query });
@@ -852,7 +840,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const handle = client.watchQuery({ query });
@@ -895,7 +883,7 @@ describe("client", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     const handle = client.watchQuery({ query });
@@ -955,7 +943,7 @@ describe("client", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: true }),
+      cache: new Hermes({ addTypename: true }),
     });
 
     return client
@@ -1013,7 +1001,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: true }),
+        cache: new Hermes({ addTypename: true }),
       });
 
       return client
@@ -1065,7 +1053,7 @@ describe("client", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     await client.query({ query });
@@ -1104,7 +1092,7 @@ describe("client", () => {
     }).setOnError(reject);
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return client
@@ -1146,7 +1134,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       return client
@@ -1194,7 +1182,7 @@ describe("client", () => {
       }).setOnError(reject);
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       return client
@@ -1234,7 +1222,7 @@ describe("client", () => {
     }).setOnError(reject);
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return client
@@ -1285,7 +1273,7 @@ describe("client", () => {
       }).setOnError(reject);
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           possibleTypes: {
             Item: ["ColorItem", "MonochromeItem"],
           },
@@ -1341,7 +1329,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           possibleTypes: {
             Item: ["ColorItem", "MonochromeItem"],
           },
@@ -1413,7 +1401,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           possibleTypes: {
             Item: ["ColorItem", "MonochromeItem"],
           },
@@ -1471,7 +1459,7 @@ describe("client", () => {
     ]);
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return client.query({ query }).then((actualResult) => {
@@ -1496,7 +1484,7 @@ describe("client", () => {
     ]);
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return client.mutate({ mutation }).then((actualResult) => {
@@ -1541,7 +1529,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
         queryDeduplication: false,
       });
 
@@ -1592,7 +1580,7 @@ describe("client", () => {
     ).setOnError(reject);
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     const q1 = client.query({ query: queryDoc });
@@ -1640,7 +1628,7 @@ describe("client", () => {
     );
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
       queryDeduplication: false,
     });
 
@@ -1695,7 +1683,7 @@ describe("client", () => {
     );
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     // The first query gets tracked in the dedup logic, the second one ignores it and runs anyways
@@ -1736,7 +1724,7 @@ describe("client", () => {
             };
           });
         }),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const sub1 = client
@@ -1770,7 +1758,7 @@ describe("client", () => {
     it("errors when returnPartialData is used on query", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
       expect(() => {
         client.query({ query, returnPartialData: true } as QueryOptions);
@@ -1780,7 +1768,7 @@ describe("client", () => {
     it("errors when returnPartialData is used on watchQuery", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
       expect(() => {
         client.query({ query, returnPartialData: true } as QueryOptions);
@@ -1820,7 +1808,7 @@ describe("client", () => {
       const client = new ApolloClient({
         link,
 
-        cache: new InMemoryCache({
+        cache: new Hermes({
           dataIdFromObject: (obj: any) => obj.id,
           addTypename: false,
         }),
@@ -1830,7 +1818,7 @@ describe("client", () => {
         .query({ query })
         .then((result) => {
           expect(result.data).toEqual(data);
-          expect((client.cache as InMemoryCache).extract()["1"]).toEqual({
+          expect((client.cache as Hermes).extract()["1"]).toEqual({
             id: "1",
             name: "Luke Skywalker",
           });
@@ -1878,7 +1866,7 @@ describe("client", () => {
     it("warns when used with client.query", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       checkCacheAndNetworkError(() =>
@@ -1892,7 +1880,7 @@ describe("client", () => {
     it("warns when used with client.query with defaultOptions", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         defaultOptions: {
           query: {
             fetchPolicy: "cache-and-network" as FetchPolicy,
@@ -1918,7 +1906,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       client.writeQuery({ query, data: initialData });
@@ -1947,7 +1935,7 @@ describe("client", () => {
         }).setOnError(reject);
         const client = new ApolloClient({
           link,
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
         });
 
         const obs = client.watchQuery({
@@ -1968,7 +1956,7 @@ describe("client", () => {
       const link = mockSingleLink(); // no queries = no replies.
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const obs = client.watchQuery({
@@ -1997,7 +1985,7 @@ describe("client", () => {
 
         const client = new ApolloClient({
           link,
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
         });
 
         client.writeQuery({ query, data: initialData });
@@ -2047,7 +2035,7 @@ describe("client", () => {
           result: { data },
         }).setOnError(reject);
 
-        const client = new ApolloClient({ link, cache: new InMemoryCache() });
+        const client = new ApolloClient({ link, cache: new Hermes() });
 
         const obs = client.watchQuery({ query, fetchPolicy: "cache-first" });
 
@@ -2089,7 +2077,7 @@ describe("client", () => {
           result: { data },
         }).setOnError(reject);
 
-        const client = new ApolloClient({ link, cache: new InMemoryCache() });
+        const client = new ApolloClient({ link, cache: new Hermes() });
 
         const obs = client.watchQuery({ query, fetchPolicy: "cache-first" });
 
@@ -2149,7 +2137,7 @@ describe("client", () => {
     itAsync("forces the query to rerun", (resolve, reject) => {
       const client = new ApolloClient({
         link: makeLink(reject),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       // Run a query first to initialize the store
@@ -2169,7 +2157,7 @@ describe("client", () => {
       const client = new ApolloClient({
         link: makeLink(reject),
         ssrMode: true,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const options: QueryOptions = { query, fetchPolicy: "network-only" };
@@ -2198,7 +2186,7 @@ describe("client", () => {
         const client = new ApolloClient({
           link: makeLink(reject),
           ssrForceFetchDelay: 100,
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
         });
 
         // Run a query first to initialize the store
@@ -2247,7 +2235,7 @@ describe("client", () => {
           result: { data },
           error: networkError,
         }),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       client
@@ -2288,7 +2276,7 @@ describe("client", () => {
           request: { query: mutation },
           result: { data, errors },
         }).setOnError(reject),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
       client
         .mutate({ mutation })
@@ -2334,7 +2322,7 @@ describe("client", () => {
             },
           },
         }).setOnError(reject),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
       client
         .mutate({ mutation, errorPolicy: "all" })
@@ -2378,7 +2366,7 @@ describe("client", () => {
         request: { query: mutation },
         result: { data, errors },
       }).setOnError(reject),
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
     client
       .mutate({ mutation, errorPolicy: "ignore" })
@@ -2419,7 +2407,7 @@ describe("client", () => {
           request: { query: mutation },
           result: { data, errors },
         }).setOnError(reject),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
       const mutatePromise = client.mutate({
         mutation,
@@ -2455,7 +2443,7 @@ describe("client", () => {
   it("has a clearStore method which calls QueryManager", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     // @ts-ignore
@@ -2467,7 +2455,7 @@ describe("client", () => {
   it("has an onClearStore method which takes a callback to be called after clearStore", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const onClearStore = jest.fn();
@@ -2481,7 +2469,7 @@ describe("client", () => {
   it("onClearStore returns a method that unsubscribes the callback", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const onClearStore = jest.fn();
@@ -2496,7 +2484,7 @@ describe("client", () => {
   it("has a resetStore method which calls QueryManager", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     // @ts-ignore
@@ -2508,7 +2496,7 @@ describe("client", () => {
   it("has an onResetStore method which takes a callback to be called after resetStore", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const onResetStore = jest.fn();
@@ -2522,7 +2510,7 @@ describe("client", () => {
   it("onResetStore returns a method that unsubscribes the callback", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const onResetStore = jest.fn();
@@ -2539,7 +2527,7 @@ describe("client", () => {
 
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     let count = 0;
@@ -2606,7 +2594,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       let count = 0;
@@ -2661,7 +2649,7 @@ describe("client", () => {
   it("has a reFetchObservableQueries method which calls QueryManager", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     // @ts-ignore
@@ -2673,7 +2661,7 @@ describe("client", () => {
   it("has a refetchQueries method which calls QueryManager", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const spy = jest.spyOn(client["queryManager"], "refetchQueries");
@@ -2700,7 +2688,7 @@ describe("client", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const spy = jest.spyOn(client["queryManager"], "refetchQueries");
@@ -2718,7 +2706,7 @@ describe("client", () => {
   it("has a getObservableQueries method which calls QueryManager", async () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     // @ts-ignore
@@ -2740,7 +2728,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const handle = client.watchQuery({
@@ -2784,7 +2772,7 @@ describe("client", () => {
       );
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       let count = 0;
@@ -2897,7 +2885,7 @@ describe("client", () => {
     }).setOnError(reject);
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     return client
@@ -2940,7 +2928,7 @@ describe("client", () => {
       }).setOnError(reject);
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           // Passing an empty map enables the warning:
           possibleTypes: {},
         }),
@@ -2991,7 +2979,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       return client
@@ -3039,7 +3027,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             Query: {
               fields: {
@@ -3097,7 +3085,7 @@ describe("client", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       return client
@@ -3147,14 +3135,14 @@ describe("@connection", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       return client
         .query({ query })
         .then((actualResult) => {
           expect(actualResult.data).toEqual(result);
-          expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+          expect((client.cache as Hermes).extract()).toMatchSnapshot();
         })
         .then(resolve, reject);
     }
@@ -3198,14 +3186,14 @@ describe("@connection", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       return client
         .query({ query, variables })
         .then((actualResult) => {
           expect(actualResult.data).toEqual(result);
-          expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+          expect((client.cache as Hermes).extract()).toMatchSnapshot();
         })
         .then(resolve, reject);
     }
@@ -3248,7 +3236,7 @@ describe("@connection", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             Query: {
               fields: {
@@ -3265,7 +3253,7 @@ describe("@connection", () => {
         .query({ query, variables })
         .then((actualResult) => {
           expect(actualResult.data).toEqual(result);
-          expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+          expect((client.cache as Hermes).extract()).toMatchSnapshot();
         })
         .then(resolve, reject);
     }
@@ -3276,7 +3264,7 @@ describe("@connection", () => {
     async (resolve, reject) => {
       const aVar = makeVar(123);
       const bVar = makeVar("asdf");
-      const cache: InMemoryCache = new InMemoryCache({
+      const cache: Hermes = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -3466,7 +3454,7 @@ describe("@connection", () => {
       const bVar = makeVar("asdf");
       const aSpy = jest.spyOn(aVar, "forgetCache");
       const bSpy = jest.spyOn(bVar, "forgetCache");
-      const cache: InMemoryCache = new InMemoryCache({
+      const cache: Hermes = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -3596,7 +3584,7 @@ describe("@connection", () => {
         }).setOnError(reject);
         const client = new ApolloClient({
           link,
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           defaultOptions: {
             watchQuery: {
               fetchPolicy: "cache-and-network",
@@ -3647,7 +3635,7 @@ describe("@connection", () => {
               })
           ),
 
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
 
           defaultOptions: {
             watchQuery: {
@@ -3731,7 +3719,7 @@ describe("@connection", () => {
       (resolve, reject) => {
         let linkCount = 0;
         const client = new ApolloClient({
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           link: new ApolloLink(
             (request) =>
               new Observable((observer) => {
@@ -3842,7 +3830,7 @@ describe("@connection", () => {
       }).setOnError(reject);
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
         defaultOptions: {
           query: { errorPolicy: "all" },
         },
@@ -3878,7 +3866,7 @@ describe("@connection", () => {
 
         const client = new ApolloClient({
           link,
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           defaultOptions: {
             mutate: { variables: { id: 1 } },
           },
@@ -3937,7 +3925,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       documentTransform,
     });
 
@@ -4019,7 +4007,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       documentTransform,
     });
 
@@ -4104,7 +4092,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         fragments: createFragmentRegistry(gql`
           fragment ProductFields on Product {
             description
@@ -4195,7 +4183,7 @@ describe("custom document transforms", () => {
     const client = new ApolloClient({
       link,
       documentTransform,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           User: {
             fields: {
@@ -4258,7 +4246,7 @@ describe("custom document transforms", () => {
     const client = new ApolloClient({
       link,
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     await client.query({ query });
@@ -4289,7 +4277,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     await client.query({ query });
@@ -4341,7 +4329,7 @@ describe("custom document transforms", () => {
     const client = new ApolloClient({
       link,
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { data } = await client.mutate({
@@ -4424,7 +4412,7 @@ describe("custom document transforms", () => {
     const client = new ApolloClient({
       link: ApolloLink.from([link, new MockLink(mocks)]),
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { data } = await client.mutate({
@@ -4513,7 +4501,7 @@ describe("custom document transforms", () => {
     const client = new ApolloClient({
       link,
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { data } = await client.mutate({
@@ -4578,7 +4566,7 @@ describe("custom document transforms", () => {
     const client = new ApolloClient({
       link,
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     await client.mutate({ mutation, variables: { username: "foo" } });
@@ -4617,7 +4605,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     await client.mutate({ mutation });
@@ -4669,7 +4657,7 @@ describe("custom document transforms", () => {
     const client = new ApolloClient({
       link,
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const onNext = jest.fn();
@@ -4745,7 +4733,7 @@ describe("custom document transforms", () => {
     const client = new ApolloClient({
       link,
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const onNext = jest.fn();
@@ -4796,7 +4784,7 @@ describe("custom document transforms", () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const subscription = client.subscribe({ query }).subscribe(jest.fn());
@@ -4837,7 +4825,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const subscription = client.subscribe({ query }).subscribe(jest.fn());
@@ -4898,7 +4886,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       documentTransform,
     });
 
@@ -4962,7 +4950,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const observable = client.watchQuery({ query });
@@ -5032,7 +5020,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         fragments: createFragmentRegistry(gql`
           fragment ProductFields on Product {
             description
@@ -5147,7 +5135,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link: ApolloLink.from([link, new MockLink(mocks)]),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       documentTransform,
     });
 
@@ -5261,7 +5249,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link: ApolloLink.from([link, new MockLink(mocks)]),
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -5416,7 +5404,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link: ApolloLink.from([link, new MockLink(mocks)]),
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -5566,7 +5554,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link: ApolloLink.from([link, new MockLink(mocks)]),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       documentTransform,
     });
 
@@ -5680,7 +5668,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link: ApolloLink.from([link, new MockLink(mocks)]),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       documentTransform,
     });
 
@@ -5805,7 +5793,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link: ApolloLink.from([link, new MockLink(mocks)]),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       documentTransform,
     });
 
@@ -5875,7 +5863,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         fragments: createFragmentRegistry(gql`
           fragment ProductFields on Product {
             description @custom
@@ -5951,7 +5939,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         fragments: createFragmentRegistry(gql`
           fragment ProductFields on Product {
             unused @custom
@@ -6040,7 +6028,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         fragments: createFragmentRegistry(gql`
           fragment ProductFields on Product {
             description
@@ -6104,7 +6092,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink((operation) => {
         requests.push(operation);
 
@@ -6189,7 +6177,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink((operation) => {
         requests.push(operation);
 
@@ -6278,7 +6266,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink((operation) => {
         requests.push(operation);
 
@@ -6352,7 +6340,7 @@ describe("custom document transforms", () => {
 
     const client = new ApolloClient({
       documentTransform,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink((operation) => {
         requests.push(operation);
 
@@ -6422,7 +6410,7 @@ function clientRoundtrip(
 
   const client = new ApolloClient({
     link,
-    cache: new InMemoryCache({
+    cache: new Hermes({
       possibleTypes,
     }),
   });

@@ -3,12 +3,12 @@ import { GraphQLError } from "graphql";
 import gql from "graphql-tag";
 import { act, render, renderHook, waitFor } from "@testing-library/react";
 
+import { Hermes } from "apollo-cache-hermes";
 import {
   ApolloClient,
   ApolloError,
   ApolloLink,
   ErrorPolicy,
-  InMemoryCache,
   NetworkStatus,
   TypedDocumentNode,
 } from "../../../core";
@@ -297,7 +297,7 @@ describe("useLazyQuery Hook", () => {
           },
         },
       },
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink(
         (request) =>
           new Observable((observer) => {
@@ -541,7 +541,7 @@ describe("useLazyQuery Hook", () => {
       },
     ];
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const ProfiledHook = profileHook(() => useLazyQuery(query1));
     render(<ProfiledHook />, {
       wrapper: ({ children }) => (
@@ -854,7 +854,7 @@ describe("useLazyQuery Hook", () => {
   });
 
   it("should work with cache-and-network fetch policy", async () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const link = mockSingleLink({
       request: { query: helloQuery },
       result: { data: { hello: "from link" } },
@@ -1182,7 +1182,7 @@ describe("useLazyQuery Hook", () => {
 
   it("allows in-flight requests to resolve when component unmounts", async () => {
     const link = new MockSubscriptionLink();
-    const client = new ApolloClient({ link, cache: new InMemoryCache() });
+    const client = new ApolloClient({ link, cache: new Hermes() });
 
     const { result, unmount } = renderHook(() => useLazyQuery(helloQuery), {
       wrapper: ({ children }) => (
@@ -1210,7 +1210,7 @@ describe("useLazyQuery Hook", () => {
 
   it("handles resolving multiple in-flight requests when component unmounts", async () => {
     const link = new MockSubscriptionLink();
-    const client = new ApolloClient({ link, cache: new InMemoryCache() });
+    const client = new ApolloClient({ link, cache: new Hermes() });
 
     const { result, unmount } = renderHook(() => useLazyQuery(helloQuery), {
       wrapper: ({ children }) => (
@@ -1440,7 +1440,7 @@ describe("useLazyQuery Hook", () => {
       });
     });
 
-    const client = new ApolloClient({ link, cache: new InMemoryCache() });
+    const client = new ApolloClient({ link, cache: new Hermes() });
 
     const { result, rerender } = renderHook(
       () => useLazyQuery(query, { variables: { id: "1" } }),
@@ -1509,7 +1509,7 @@ describe("useLazyQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(
@@ -1582,7 +1582,7 @@ describe("useLazyQuery Hook", () => {
       },
     ]);
 
-    const client = new ApolloClient({ link, cache: new InMemoryCache() });
+    const client = new ApolloClient({ link, cache: new Hermes() });
 
     let countRef = { current: 0 };
 
@@ -1714,7 +1714,7 @@ describe("useLazyQuery Hook", () => {
       });
     });
 
-    const client = new ApolloClient({ link, cache: new InMemoryCache() });
+    const client = new ApolloClient({ link, cache: new Hermes() });
 
     const { result, rerender } = renderHook(
       ({ id }) => useLazyQuery(query, { variables: { id } }),
@@ -1738,7 +1738,7 @@ describe("useLazyQuery Hook", () => {
       const networkError = new Error("from the network");
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(
           (request) =>
             new Observable((observer) => {
@@ -1811,7 +1811,7 @@ describe("useLazyQuery Hook", () => {
 
       let count = 0;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(
           (request) =>
             new Observable((observer) => {
@@ -1931,7 +1931,7 @@ describe("useLazyQuery Hook", () => {
     link.onSetup(() => requests++);
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
     const ProfiledHook = profileHook(() => useLazyQuery(helloQuery));
     render(<ProfiledHook />, {

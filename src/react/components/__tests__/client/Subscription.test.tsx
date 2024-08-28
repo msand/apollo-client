@@ -3,12 +3,12 @@ import gql from "graphql-tag";
 import { render, waitFor } from "@testing-library/react";
 
 import { ApolloClient, ApolloError } from "../../../../core";
-import { InMemoryCache as Cache } from "../../../../cache";
 import { ApolloProvider } from "../../../context";
 import { ApolloLink, DocumentNode, Operation } from "../../../../link/core";
 import { itAsync, MockSubscriptionLink } from "../../../../testing";
 import { Subscription } from "../../Subscription";
 import { profile, spyOnConsole } from "../../../../testing/internal";
+import { Hermes as Cache } from "apollo-cache-hermes";
 
 const results = [
   "Luke Skywalker",

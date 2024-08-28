@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 import { EntityStore } from "../entityStore";
 import { StoreReader } from "../readFromStore";
 import { StoreWriter } from "../writeToStore";
-import { InMemoryCache } from "../inMemoryCache";
+import { Hermes } from "apollo-cache-hermes";
 import { writeQueryToStore, readQueryFromStore, withError } from "./helpers";
 import { spyOnConsole } from "../../../testing/internal";
 
@@ -21,7 +21,7 @@ function assertDeeplyFrozen(value: any, stack: any[] = []) {
 }
 
 function storeRoundtrip(query: DocumentNode, result: any, variables = {}) {
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     possibleTypes: {
       Character: ["Jedi", "Droid"],
     },

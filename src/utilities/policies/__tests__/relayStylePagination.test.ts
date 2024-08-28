@@ -1,10 +1,10 @@
 import {
   FieldFunctionOptions,
-  InMemoryCache,
   isReference,
   makeReference,
   StoreObject,
 } from "../../../cache";
+import { Hermes } from "apollo-cache-hermes";
 import { relayStylePagination, TRelayPageInfo } from "../pagination";
 
 describe("relayStylePagination", () => {
@@ -184,7 +184,7 @@ describe("relayStylePagination", () => {
       isReference: isReference,
       toReference: () => undefined,
       storage: {},
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       readField: () => undefined,
       canRead: () => false,
       mergeObjects: (existing, _incoming) => existing,

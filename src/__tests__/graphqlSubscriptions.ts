@@ -1,13 +1,13 @@
 import gql from "graphql-tag";
 
 import { ApolloClient, FetchResult } from "../core";
-import { InMemoryCache } from "../cache";
 import { ApolloError, PROTOCOL_ERRORS_SYMBOL } from "../errors";
 import { QueryManager } from "../core/QueryManager";
 import { itAsync, mockObservableLink } from "../testing";
 import { GraphQLError } from "graphql";
 import { spyOnConsole } from "../testing/internal";
 import { getDefaultOptionsForQueryManagerTests } from "../testing/core/mocking/mockQueryManager";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("GraphQL Subscriptions", () => {
   const results = [
@@ -54,7 +54,7 @@ describe("GraphQL Subscriptions", () => {
       // This test calls directly through Apollo Client
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       let count = 0;
@@ -81,7 +81,7 @@ describe("GraphQL Subscriptions", () => {
     // This test calls directly through Apollo Client
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     let count = 0;
@@ -107,7 +107,7 @@ describe("GraphQL Subscriptions", () => {
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       })
     );
 
@@ -149,7 +149,7 @@ describe("GraphQL Subscriptions", () => {
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
           link,
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
         })
       );
 
@@ -174,7 +174,7 @@ describe("GraphQL Subscriptions", () => {
     "should not cache subscription data if a `no-cache` fetch policy is used",
     (resolve, reject) => {
       const link = mockObservableLink();
-      const cache = new InMemoryCache({ addTypename: false });
+      const cache = new Hermes({ addTypename: false });
       const client = new ApolloClient({
         link,
         cache,
@@ -200,7 +200,7 @@ describe("GraphQL Subscriptions", () => {
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       })
     );
 
@@ -252,7 +252,7 @@ describe("GraphQL Subscriptions", () => {
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       })
     );
 
@@ -301,7 +301,7 @@ describe("GraphQL Subscriptions", () => {
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       })
     );
 
@@ -372,7 +372,7 @@ describe("GraphQL Subscriptions", () => {
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       })
     );
 
@@ -416,7 +416,7 @@ describe("GraphQL Subscriptions", () => {
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       })
     );
 
@@ -479,7 +479,7 @@ describe("GraphQL Subscriptions", () => {
     const link = mockObservableLink();
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return new Promise<void>((resolve) => {
@@ -497,7 +497,7 @@ describe("GraphQL Subscriptions", () => {
     (resolve, reject) => {
       const link = mockObservableLink();
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
       });
 
@@ -519,7 +519,7 @@ describe("GraphQL Subscriptions", () => {
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       })
     );
 

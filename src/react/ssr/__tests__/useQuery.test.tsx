@@ -8,7 +8,7 @@ import {
   mockSingleLink,
 } from "../../../testing";
 import { ApolloClient } from "../../../core";
-import { InMemoryCache } from "../../../cache";
+import { Hermes } from "apollo-cache-hermes";
 import { ApolloProvider, getApolloContext } from "../../context";
 import { useApolloClient, useQuery } from "../../hooks";
 import { renderToStringWithData } from "..";
@@ -147,7 +147,7 @@ describe("useQuery Hook SSR", () => {
     });
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link,
       ssrMode: true,
     });
@@ -257,7 +257,7 @@ describe("useQuery Hook SSR", () => {
   });
 
   it("should return data written previously to cache during SSR pass if using cache-only fetchPolicy", async () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Order: {
           keyFields: ["selection"],

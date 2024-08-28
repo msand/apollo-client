@@ -2,13 +2,13 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import {
   ApolloClient,
-  InMemoryCache,
   NetworkStatus,
   SubscribeToMoreOptions,
   TypedDocumentNode,
   gql,
   split,
 } from "../../../core";
+import { Hermes } from "apollo-cache-hermes";
 import {
   MockLink,
   MockSubscriptionLink,
@@ -38,7 +38,7 @@ test("does not interfere with updates from useReadQuery", async () => {
   const { query, mocks } = setupSimpleCase();
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
   });
 
@@ -137,7 +137,7 @@ test("refetches and resuspends when calling refetch", async () => {
   ];
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
   });
 
@@ -240,7 +240,7 @@ test('honors refetchWritePolicy set to "merge"', async () => {
   ];
 
   const mergeParams: [number[] | undefined, number[]][] = [];
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     typePolicies: {
       Query: {
         fields: {
@@ -366,7 +366,7 @@ test('honors refetchWritePolicy set to "overwrite"', async () => {
   ];
 
   const mergeParams: [number[] | undefined, number[]][] = [];
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     typePolicies: {
       Query: {
         fields: {
@@ -489,7 +489,7 @@ test('defaults refetchWritePolicy to "overwrite"', async () => {
   ];
 
   const mergeParams: [number[] | undefined, number[]][] = [];
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     typePolicies: {
       Query: {
         fields: {
@@ -626,7 +626,7 @@ test("`refetch` works with startTransition", async () => {
 
   const client = new ApolloClient({
     link: new MockLink(mocks),
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
   });
 
   const Profiler = createProfiler({
@@ -760,7 +760,7 @@ test("`refetch` works with startTransition from useBackgroundQuery and usePreloa
   ];
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
   });
 
@@ -925,7 +925,7 @@ test("refetches from queryRefs produced by useBackgroundQuery", async () => {
   ];
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
   });
 
@@ -1012,7 +1012,7 @@ test("refetches from queryRefs produced by useLoadableQuery", async () => {
   ];
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
   });
 
@@ -1096,7 +1096,7 @@ test("resuspends when calling `fetchMore`", async () => {
   const user = userEvent.setup();
 
   const client = new ApolloClient({
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1198,7 +1198,7 @@ test("properly uses `updateQuery` when calling `fetchMore`", async () => {
 
   const user = userEvent.setup();
 
-  const client = new ApolloClient({ cache: new InMemoryCache(), link });
+  const client = new ApolloClient({ cache: new Hermes(), link });
   const preloadQuery = createQueryPreloader(client);
 
   const Profiler = createProfiler({
@@ -1300,7 +1300,7 @@ test("properly uses cache field policies when calling `fetchMore` without `updat
   const user = userEvent.setup();
 
   const client = new ApolloClient({
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1404,7 +1404,7 @@ test("paginates from queryRefs produced by useBackgroundQuery", async () => {
 
   const user = userEvent.setup();
   const client = new ApolloClient({
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1507,7 +1507,7 @@ test("paginates from queryRefs produced by useLoadableQuery", async () => {
 
   const user = userEvent.setup();
   const client = new ApolloClient({
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1618,7 +1618,7 @@ test("`fetchMore` works with startTransition", async () => {
 
   const user = userEvent.setup();
   const client = new ApolloClient({
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1748,7 +1748,7 @@ test("`fetchMore` works with startTransition from useBackgroundQuery and useQuer
 
   const user = userEvent.setup();
   const client = new ApolloClient({
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1975,7 +1975,7 @@ test("can subscribe to subscriptions and react to cache updates via `subscribeTo
     mockLink
   );
 
-  const client = new ApolloClient({ link, cache: new InMemoryCache() });
+  const client = new ApolloClient({ link, cache: new Hermes() });
 
   const preloadQuery = createQueryPreloader(client);
   const queryRef = preloadQuery(query);

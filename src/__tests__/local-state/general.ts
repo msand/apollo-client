@@ -16,9 +16,10 @@ import { Observable } from "../../utilities";
 import { ApolloLink } from "../../link/core";
 import { Operation } from "../../link/core";
 import { ApolloClient } from "../../core";
-import { ApolloCache, InMemoryCache } from "../../cache";
+import { ApolloCache } from "../../cache";
 import { itAsync } from "../../testing";
 import { spyOnConsole } from "../../testing/internal";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("General functionality", () => {
   it("should not impact normal non-@client use", () => {
@@ -30,7 +31,7 @@ describe("General functionality", () => {
 
     const link = new ApolloLink(() => Observable.of({ data: { field: 1 } }));
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link,
       resolvers: {
         Query: {
@@ -53,7 +54,7 @@ describe("General functionality", () => {
     const link = new ApolloLink(() => Observable.of({ errors: [error] }));
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link,
       resolvers: {
         Query: {
@@ -80,7 +81,7 @@ describe("General functionality", () => {
     `;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: ApolloLink.empty(),
       resolvers: {
         Query: {
@@ -103,7 +104,7 @@ describe("General functionality", () => {
 
     let count = 0;
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: ApolloLink.empty(),
       resolvers: {
         Query: {
@@ -138,7 +139,7 @@ describe("General functionality", () => {
 
     let count = 0;
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: ApolloLink.empty(),
       resolvers: {
         Query: {
@@ -201,7 +202,7 @@ describe("General functionality", () => {
     ) => __typename === typeCondition;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache({
+      cache: new Hermes({
         possibleTypes: {
           Foo: ["Bar", "Baz"],
         },
@@ -228,7 +229,7 @@ describe("Cache manipulation", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -258,7 +259,7 @@ describe("Cache manipulation", () => {
 
     const resolvers = {
       Mutation: {
-        start: (_1: any, _2: any, { cache }: { cache: InMemoryCache }) => {
+        start: (_1: any, _2: any, { cache }: { cache: Hermes }) => {
           cache.writeQuery({ query, data: { field: 1 } });
           return { start: true };
         },
@@ -266,7 +267,7 @@ describe("Cache manipulation", () => {
     };
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: ApolloLink.empty(),
       resolvers,
     });
@@ -300,7 +301,7 @@ describe("Cache manipulation", () => {
           field: () => 0,
         },
         Mutation: {
-          start: (_1: any, _2: any, { cache }: { cache: InMemoryCache }) => {
+          start: (_1: any, _2: any, { cache }: { cache: Hermes }) => {
             cache.writeQuery({ query, data: { field: 1 } });
             return { start: true };
           },
@@ -308,7 +309,7 @@ describe("Cache manipulation", () => {
       };
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: ApolloLink.empty(),
         resolvers,
       });
@@ -363,7 +364,7 @@ describe("Cache manipulation", () => {
     };
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: ApolloLink.empty(),
       resolvers,
     });
@@ -408,7 +409,7 @@ describe("Cache manipulation", () => {
 
       let selectedItemId = -1;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(() => Observable.of({ data: { serverData } })),
         resolvers: {
           Query: {
@@ -477,7 +478,7 @@ describe("Cache manipulation", () => {
         }
       `;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(() => Observable.of({ data: {} })),
         resolvers: {
           ClientData: {
@@ -578,7 +579,7 @@ describe("Sample apps", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         resolvers: {},
       });
 
@@ -679,7 +680,7 @@ describe("Sample apps", () => {
 
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         resolvers: {},
       });
 
@@ -777,7 +778,7 @@ describe("Combining client and server state/operations", () => {
     const link = new ApolloLink(() => Observable.of({ data }));
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link,
       resolvers: {
         Mutation: {
@@ -918,7 +919,7 @@ describe("Combining client and server state/operations", () => {
       });
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
       });
 
@@ -962,7 +963,7 @@ describe("Combining client and server state/operations", () => {
       const link = new ApolloLink(() => Observable.of({ data }));
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
         resolvers: {
           Query: {
@@ -1024,7 +1025,7 @@ describe("Combining client and server state/operations", () => {
           lastCount
         }
       `;
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const link = new ApolloLink((operation) => {
         expect(operation.operationName).toBe("GetCount");
@@ -1065,7 +1066,7 @@ describe("Combining client and server state/operations", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const link = new ApolloLink((operation) => {
         expect(operation.operationName).toBe("GetUser");
         return Observable.of({
@@ -1170,7 +1171,7 @@ describe("Combining client and server state/operations", () => {
         });
       });
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link,
@@ -1241,7 +1242,7 @@ describe("Combining client and server state/operations", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const link = new ApolloLink((operation) => {
         return Observable.of({
           data: null,

@@ -3,7 +3,6 @@ import gql from "graphql-tag";
 import { GraphQLError } from "graphql";
 
 import { ApolloClient, FetchResult } from "../core";
-import { InMemoryCache } from "../cache";
 import { ApolloLink } from "../link/core";
 import {
   Observable,
@@ -11,6 +10,7 @@ import {
 } from "../utilities";
 import { itAsync, subscribeAndCount, mockSingleLink } from "../testing";
 import { spyOnConsole } from "../testing/internal";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("mutation results", () => {
   const query = gql`
@@ -132,7 +132,7 @@ describe("mutation results", () => {
         },
         ...mockedResponses
       ),
-      cache: new InMemoryCache({
+      cache: new Hermes({
         dataIdFromObject: (obj: any) => {
           if (obj.id && obj.__typename) {
             return obj.__typename + obj.id;
@@ -167,7 +167,7 @@ describe("mutation results", () => {
         },
         ...mockedResponses
       ).setOnError(reject),
-      cache: new InMemoryCache({
+      cache: new Hermes({
         dataIdFromObject: (obj: any) => {
           if (obj.id && obj.__typename) {
             return obj.__typename + obj.id;
@@ -291,7 +291,7 @@ describe("mutation results", () => {
       }
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           dataIdFromObject: (obj: any) => {
             if (obj.id && obj.__typename) {
               return obj.__typename + obj.id;
@@ -338,7 +338,7 @@ describe("mutation results", () => {
       const expectedFakeError = new GraphQLError("expected/fake error");
 
       const client = new ApolloClient({
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             Person: {
               keyFields: ["name"],
@@ -530,7 +530,7 @@ describe("mutation results", () => {
     });
   });
 
-  describe("InMemoryCache type/field policies", () => {
+  describe("Hermes type/field policies", () => {
     const startTime = Date.now();
     const link = new ApolloLink(
       (operation) =>
@@ -562,7 +562,7 @@ describe("mutation results", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             MutationPayload: {
               fields: {
@@ -640,7 +640,7 @@ describe("mutation results", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             MutationPayload: {
               fields: {
@@ -721,7 +721,7 @@ describe("mutation results", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             MutationPayload: {
               fields: {
@@ -1168,7 +1168,7 @@ describe("mutation results", () => {
             result: resetMutationResult,
           }
         ).setOnError(reject),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const watchedQuery = client.watchQuery({
@@ -1209,7 +1209,7 @@ describe("mutation results", () => {
     let count = 0;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
       link: ApolloLink.from([
         ({ variables }: any) =>
           new Observable((observer) => {
@@ -1289,7 +1289,7 @@ describe("mutation results", () => {
     let count = 0;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
       link: ApolloLink.from([
         ({ variables }: any) =>
           new Observable((observer) => {
@@ -1369,7 +1369,7 @@ describe("mutation results", () => {
       let count = 0;
 
       const client = new ApolloClient({
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
         link: ApolloLink.from([
           ({ variables }: any) =>
             new Observable((observer) => {
@@ -1804,7 +1804,7 @@ describe("mutation results", () => {
             request: { query: mutation } as any,
             result: result1,
           }).setOnError(reject),
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
         });
 
         client
@@ -1824,7 +1824,7 @@ describe("mutation results", () => {
       "data might be undefined in case of failure with errorPolicy = ignore",
       async (resolve, reject) => {
         const client = new ApolloClient({
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           link: new ApolloLink(
             () =>
               new Observable<FetchResult<{ foo: string }>>((observer) => {

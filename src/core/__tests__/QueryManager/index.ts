@@ -11,11 +11,12 @@ import {
   Observer,
 } from "../../../utilities/observables/Observable";
 import { ApolloLink, GraphQLRequest, FetchResult } from "../../../link/core";
-import { InMemoryCache, InMemoryCacheConfig } from "../../../cache";
+import { InMemoryCacheConfig } from "../../../cache";
 import {
   ApolloReducerConfig,
   NormalizedCacheObject,
 } from "../../../cache/inmemory/types";
+import { Hermes } from "apollo-cache-hermes";
 
 // mocks
 import mockQueryManager, {
@@ -94,7 +95,7 @@ describe("QueryManager", () => {
     return new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache({ addTypename: false, ...config }),
+        cache: new Hermes({ addTypename: false, ...config }),
         clientAwareness,
         queryDeduplication,
         // Enable client.queryManager.mutationStore tracking.
@@ -546,7 +547,7 @@ describe("QueryManager", () => {
     const mockedQueryManger = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link: mockedSingleLink,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       })
     );
 
@@ -629,7 +630,7 @@ describe("QueryManager", () => {
     const mockedQueryManger = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link: mockedSingleLink,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
         defaultOptions: {
           watchQuery: {
             fetchPolicy: "cache-and-network",
@@ -2441,7 +2442,7 @@ describe("QueryManager", () => {
   itAsync(
     "should not write unchanged network results to cache",
     (resolve, reject) => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -2586,7 +2587,7 @@ describe("QueryManager", () => {
   itAsync(
     "should disable feud-stopping logic after evict or modify",
     (resolve, reject) => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -2907,7 +2908,7 @@ describe("QueryManager", () => {
             { request: { query: queryA }, result: { data: dataA } },
             { request: { query: queryB }, result: { data: dataB }, delay: 20 }
           ).setOnError(reject),
-          cache: new InMemoryCache({}),
+          cache: new Hermes({}),
           ssrMode: true,
         })
       );
@@ -3096,7 +3097,7 @@ describe("QueryManager", () => {
               result: { data: data2 },
             }
           ).setOnError(reject),
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           ssrMode: true,
         })
       );
@@ -5994,7 +5995,7 @@ describe("QueryManager", () => {
           { request: { query: query3 }, result: { data: { three: 3 } } },
           { request: { query: query4 }, result: { data: { four: 4 } } }
         ).setOnError(reject);
-        const cache = new InMemoryCache();
+        const cache = new Hermes();
 
         const queryManager = new QueryManager<NormalizedCacheObject>(
           getDefaultOptionsForQueryManagerTests({
@@ -6280,7 +6281,7 @@ describe("QueryManager", () => {
 
     it("ApolloClient and QueryManager share a `defaultContext` instance (default empty object)", () => {
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: ApolloLink.empty(),
       });
 
@@ -6290,7 +6291,7 @@ describe("QueryManager", () => {
     it("ApolloClient and QueryManager share a `defaultContext` instance (provided option)", () => {
       const defaultContext = {};
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: ApolloLink.empty(),
         defaultContext,
       });
@@ -6301,7 +6302,7 @@ describe("QueryManager", () => {
 
     it("`defaultContext` cannot be reassigned on the user-facing `ApolloClient`", () => {
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: ApolloLink.empty(),
       });
 
@@ -6320,7 +6321,7 @@ describe("QueryManager", () => {
       async (_, { method, option }) => {
         let context: any;
         const client = new ApolloClient({
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           link: new ApolloLink(
             (operation) =>
               new Observable((observer) => {
@@ -6349,7 +6350,7 @@ describe("QueryManager", () => {
     it("`ApolloClient.defaultContext` can be modified and changes will show up in future queries", async () => {
       let context: any;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(
           (operation) =>
             new Observable((observer) => {
@@ -6390,7 +6391,7 @@ describe("QueryManager", () => {
     it("`defaultContext` will be shallowly merged with explicit context", async () => {
       let context: any;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(
           (operation) =>
             new Observable((observer) => {
@@ -6426,7 +6427,7 @@ describe("QueryManager", () => {
     it("`defaultContext` will be shallowly merged with context from `defaultOptions.query.context", async () => {
       let context: any;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(
           (operation) =>
             new Observable((observer) => {
@@ -6465,7 +6466,7 @@ describe("QueryManager", () => {
       async () => {
         let context: any;
         const client = new ApolloClient({
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           link: new ApolloLink(
             (operation) =>
               new Observable((observer) => {

@@ -43,7 +43,7 @@ import { useLoadableQuery } from "../useLoadableQuery";
 import type { UseReadQueryResult } from "../useReadQuery";
 import { useReadQuery } from "../useReadQuery";
 import { ApolloProvider } from "../../context";
-import { InMemoryCache } from "../../../cache";
+import { Hermes } from "apollo-cache-hermes";
 import { LoadableQueryHookFetchPolicy } from "../../types/types";
 import { QueryRef } from "../../../react";
 import {
@@ -163,7 +163,7 @@ function usePaginatedQueryCase() {
     });
   });
 
-  const client = new ApolloClient({ cache: new InMemoryCache(), link });
+  const client = new ApolloClient({ cache: new Hermes(), link });
 
   return { query, link, client };
 }
@@ -369,7 +369,7 @@ it("tears down the query on unmount", async () => {
   const { query, mocks } = useSimpleQueryCase();
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
   });
 
@@ -424,7 +424,7 @@ it("auto disposes of the queryRef if not used within timeout", async () => {
   jest.useFakeTimers();
   const { query } = setupSimpleCase();
   const link = new MockSubscriptionLink();
-  const client = new ApolloClient({ link, cache: new InMemoryCache() });
+  const client = new ApolloClient({ link, cache: new Hermes() });
 
   const { result } = renderHook(() => useLoadableQuery(query, { client }));
   const [loadQuery] = result.current;
@@ -456,7 +456,7 @@ it("auto disposes of the queryRef if not used within configured timeout", async 
   const link = new MockSubscriptionLink();
   const client = new ApolloClient({
     link,
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     defaultOptions: {
       react: {
         suspense: {
@@ -494,7 +494,7 @@ it("will resubscribe after disposed when mounting useReadQuery", async () => {
   const { query, mocks } = setupSimpleCase();
   const client = new ApolloClient({
     link: new MockLink(mocks),
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     defaultOptions: {
       react: {
         suspense: {
@@ -582,7 +582,7 @@ it("auto resubscribes when mounting useReadQuery after naturally disposed by use
   const { query, mocks } = setupSimpleCase();
   const client = new ApolloClient({
     link: new MockLink(mocks),
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
   });
 
   const Profiler = createDefaultProfiler<SimpleCaseData>();
@@ -756,7 +756,7 @@ it("resets the `queryRef` to null and disposes of it when calling the `reset` fu
   const { query, mocks } = useSimpleQueryCase();
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
   });
 
@@ -828,7 +828,7 @@ it("allows the client to be overridden", async () => {
         delay: 10,
       },
     ]),
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
   });
 
   const localClient = new ApolloClient({
@@ -839,7 +839,7 @@ it("allows the client to be overridden", async () => {
         delay: 10,
       },
     ]),
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
   });
 
   const Profiler = createDefaultProfiler<SimpleQueryData>();
@@ -895,7 +895,7 @@ it("passes context to the link", async () => {
   `;
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new ApolloLink((operation) => {
       return new Observable((observer) => {
         const { valueA, valueB } = operation.getContext();
@@ -955,7 +955,7 @@ it('enables canonical results when canonizeResults is "true"', async () => {
     results: Result[];
   }
 
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     typePolicies: {
       Result: {
         keyFields: false,
@@ -1042,7 +1042,7 @@ it("can disable canonical results when the cache's canonizeResults setting is tr
     results: Result[];
   }
 
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     canonizeResults: true,
     typePolicies: {
       Result: {
@@ -1120,7 +1120,7 @@ it("returns initial cache data followed by network data when the fetch policy is
       hello
     }
   `;
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
   const link = new MockLink([
     {
       request: { query },
@@ -1190,7 +1190,7 @@ it("all data is present in the cache, no network request is made", async () => {
       hello
     }
   `;
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
   const link = new MockLink([
     {
       request: { query },
@@ -1250,7 +1250,7 @@ it("partial data is present in the cache so it is ignored and network request is
       foo
     }
   `;
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
   const link = new MockLink([
     {
       request: { query },
@@ -1319,7 +1319,7 @@ it("existing data in the cache is ignored when `fetchPolicy` is 'network-only'",
       hello
     }
   `;
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
   const link = new MockLink([
     {
       request: { query },
@@ -1385,7 +1385,7 @@ it("fetches data from the network but does not update the cache when `fetchPolic
       hello
     }
   `;
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
   const link = new MockLink([
     {
       request: { query },
@@ -1490,7 +1490,7 @@ it("works with startTransition to change variables", async () => {
 
   const client = new ApolloClient({
     link: new MockLink(mocks),
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
   });
 
   function SuspenseFallback() {
@@ -1601,7 +1601,7 @@ it('does not suspend deferred queries with data in the cache and using a "cache-
   `;
 
   const link = new MockSubscriptionLink();
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
   cache.writeQuery({
     query,
     data: {
@@ -1725,7 +1725,7 @@ it('does not suspend deferred queries with data in the cache and using a "cache-
 it("reacts to cache updates", async () => {
   const { query, mocks } = useSimpleQueryCase();
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
   });
 
@@ -1899,7 +1899,7 @@ it("applies `context` on next fetch when it changes between renders", async () =
 
   const client = new ApolloClient({
     link,
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
   });
 
   const Profiler = createDefaultProfiler<Data>();
@@ -1969,7 +1969,7 @@ it("returns canonical results immediately when `canonizeResults` changes from `f
     results: Result[];
   }
 
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     typePolicies: {
       Result: {
         keyFields: false,
@@ -2091,7 +2091,7 @@ it("applies changed `refetchWritePolicy` to next fetch when changing between ren
 
   const mergeParams: [number[] | undefined, number[]][] = [];
 
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     typePolicies: {
       Query: {
         fields: {
@@ -2265,7 +2265,7 @@ it("applies `returnPartialData` on next fetch when it changes between renders", 
     },
   ];
 
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   cache.writeQuery({
     query: partialQuery,
@@ -2398,7 +2398,7 @@ it("applies updated `fetchPolicy` on next fetch when it changes between renders"
     },
   ];
 
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   cache.writeQuery({
     query,
@@ -3219,7 +3219,7 @@ it("re-suspends when calling `fetchMore` with different variables", async () => 
 
   const client = new ApolloClient({
     link,
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -3394,7 +3394,7 @@ it("properly uses cache field policies when calling `fetchMore` without `updateQ
 
   const client = new ApolloClient({
     link,
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -3535,7 +3535,7 @@ it("`fetchMore` works with startTransition to allow React to show stale UI until
 
   const client = new ApolloClient({
     link: new MockLink(mocks),
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -3666,7 +3666,7 @@ it('honors refetchWritePolicy set to "merge"', async () => {
   ];
 
   const mergeParams: [number[] | undefined, number[]][] = [];
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     typePolicies: {
       Query: {
         fields: {
@@ -3780,7 +3780,7 @@ it('defaults refetchWritePolicy to "overwrite"', async () => {
   ];
 
   const mergeParams: [number[] | undefined, number[]][] = [];
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     typePolicies: {
       Query: {
         fields: {
@@ -3895,7 +3895,7 @@ it('does not suspend when partial data is in the cache and using a "cache-first"
   const { SuspenseFallback, ReadQueryHook } =
     createDefaultProfiledComponents(Profiler);
 
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   cache.writeQuery({
     query: partialQuery,
@@ -3966,7 +3966,7 @@ it('suspends and does not use partial data from other variables in the cache whe
     }
   `;
 
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   cache.writeQuery({
     query: partialQuery,
@@ -4090,7 +4090,7 @@ it('suspends when partial data is in the cache and using a "network-only" fetch 
   const { SuspenseFallback, ReadQueryHook } =
     createDefaultProfiledComponents(Profiler);
 
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   cache.writeQuery({
     query: partialQuery,
@@ -4178,7 +4178,7 @@ it('suspends when partial data is in the cache and using a "no-cache" fetch poli
     },
   ];
 
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   cache.writeQuery({
     query: partialQuery,
@@ -4294,7 +4294,7 @@ it('does not suspend when partial data is in the cache and using a "cache-and-ne
     },
   ];
 
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   cache.writeQuery({
     query: partialQuery,
@@ -4366,7 +4366,7 @@ it('suspends and does not use partial data when changing variables and using a "
     }
   `;
 
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   cache.writeQuery({
     query: partialQuery,
@@ -4474,7 +4474,7 @@ it('does not suspend deferred queries with partial data in the cache and using a
   `;
 
   const link = new MockSubscriptionLink();
-  const cache = new InMemoryCache();
+  const cache = new Hermes();
 
   {
     // We are intentionally writing partial data to the cache. Supress console
@@ -4714,7 +4714,7 @@ it("can subscribe to subscriptions and react to cache updates via `subscribeToMo
     mockLink
   );
 
-  const client = new ApolloClient({ link, cache: new InMemoryCache() });
+  const client = new ApolloClient({ link, cache: new Hermes() });
 
   const Profiler = createProfiler({
     initialSnapshot: {
@@ -4842,7 +4842,7 @@ it("throws when calling `subscribeToMore` before loading the query", async () =>
     mockLink
   );
 
-  const client = new ApolloClient({ link, cache: new InMemoryCache() });
+  const client = new ApolloClient({ link, cache: new Hermes() });
 
   const Profiler = createProfiler({
     initialSnapshot: {

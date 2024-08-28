@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 import { ApolloClient, NetworkStatus } from "../../core";
 import { ApolloLink } from "../../link/core";
-import { InMemoryCache } from "../../cache";
+import { Hermes } from "apollo-cache-hermes";
 import { Observable } from "../../utilities";
 import { subscribeAndCount, itAsync, mockSingleLink } from "../../testing";
 import { TypedDocumentNode } from "@graphql-typed-document-node/core";
@@ -111,7 +111,7 @@ describe("network-only", () => {
 
       const client = new ApolloClient({
         link: inspector.concat(createLink(reject)),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       return client
@@ -140,7 +140,7 @@ describe("network-only", () => {
 
     const client = new ApolloClient({
       link: inspector.concat(createLink(reject)),
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return client
@@ -166,7 +166,7 @@ describe("network-only", () => {
 
     const client = new ApolloClient({
       link: inspector.concat(createFailureLink()),
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     let didFail = false;
@@ -196,7 +196,7 @@ describe("network-only", () => {
 
     const client = new ApolloClient({
       link: inspector.concat(createMutationLink(reject)),
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return client
@@ -228,7 +228,7 @@ describe("no-cache", () => {
 
     const client = new ApolloClient({
       link: inspector.concat(createLink(reject)),
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return client
@@ -254,7 +254,7 @@ describe("no-cache", () => {
 
       const client = new ApolloClient({
         link: inspector.concat(createLink(reject)),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       return client
@@ -285,7 +285,7 @@ describe("no-cache", () => {
 
       const client = new ApolloClient({
         link: inspector.concat(createLink(reject)),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       return client
@@ -313,7 +313,7 @@ describe("no-cache", () => {
 
     const client = new ApolloClient({
       link: inspector.concat(createFailureLink()),
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     let didFail = false;
@@ -343,7 +343,7 @@ describe("no-cache", () => {
 
     const client = new ApolloClient({
       link: inspector.concat(createMutationLink(reject)),
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     return client
@@ -374,7 +374,7 @@ describe("no-cache", () => {
 
         const client = new ApolloClient({
           link: inspector.concat(createLink(reject)),
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
         });
 
         return client
@@ -406,7 +406,7 @@ describe("no-cache", () => {
 
       const client = new ApolloClient({
         link: inspector.concat(createFailureLink()),
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       let didFail = false;
@@ -436,7 +436,7 @@ describe("no-cache", () => {
       (resolve, reject) => {
         const client = new ApolloClient({
           link: ApolloLink.empty(),
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           resolvers: {
             Query: {
               hero(_data, args) {
@@ -546,7 +546,7 @@ describe("cache-first", () => {
             return result;
           });
         }).concat(createMutationLink(reject)),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       let inOptimisticTransaction = false;
@@ -656,7 +656,7 @@ describe("cache-only", () => {
   itAsync("allows explicit refetch to happen", (resolve, reject) => {
     let counter = 0;
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink(
         (operation) =>
           new Observable((observer) => {
@@ -719,7 +719,7 @@ describe("cache-and-network", function () {
     (resolve, reject) => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         resolvers: {
           Query: {
             hero(_data, args) {
@@ -878,7 +878,7 @@ describe("nextFetchPolicy", () => {
       (resolve, reject) => {
         const client = new ApolloClient({
           link: makeLink(),
-          cache: new InMemoryCache({
+          cache: new Hermes({
             addTypename: true,
           }),
           defaultOptions: {

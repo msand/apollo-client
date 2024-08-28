@@ -1,10 +1,6 @@
 import * as React from "react";
-import {
-  ApolloClient,
-  ApolloError,
-  InMemoryCache,
-  gql,
-} from "../../../core/index.js";
+import { ApolloClient, ApolloError, gql } from "../../../core/index.js";
+import { Hermes } from "apollo-cache-hermes";
 import type { TypedDocumentNode } from "../../../core/index.js";
 import {
   Profiler,
@@ -175,7 +171,7 @@ describe("schema proxy", () => {
     using _fetch = createSchemaFetch(schema).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
@@ -263,7 +259,7 @@ describe("schema proxy", () => {
     using _fetch = createSchemaFetch(forkedSchema).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
@@ -354,7 +350,7 @@ describe("schema proxy", () => {
     using _fetch = createSchemaFetch(schema).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
@@ -444,7 +440,7 @@ describe("schema proxy", () => {
     using _fetch = createSchemaFetch(forkedSchema).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
@@ -561,7 +557,7 @@ describe("schema proxy", () => {
     using _fetch = createSchemaFetch(forkedSchema).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
@@ -699,7 +695,7 @@ describe("schema proxy", () => {
     using _fetch = createSchemaFetch(forkedSchema).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
@@ -776,7 +772,7 @@ describe("schema proxy", () => {
     using _fetch = createSchemaFetch(forkedSchema).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
@@ -897,7 +893,7 @@ describe("schema proxy", () => {
     using _fetch = createSchemaFetch(forkedSchema).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
@@ -1052,7 +1048,7 @@ describe("schema proxy", () => {
     using _fetch = createSchemaFetch(resetTestSchema).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
@@ -1169,7 +1165,7 @@ describe("schema proxy", () => {
     }).mockGlobal();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       uri,
     });
 
