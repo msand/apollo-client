@@ -1,9 +1,9 @@
 import * as path from "path";
 import * as recast from "recast";
 import * as parser from "recast/parsers/babel";
-import glob = require("glob");
+import glob from "glob";
 
-export const distDir = path.resolve(__dirname, "..", "dist");
+export const distDir = path.resolve(__dirname, "..", "dist", "apollo-client", "src");
 
 export function eachFile(
   dir: string,

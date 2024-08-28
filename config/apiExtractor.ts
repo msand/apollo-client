@@ -9,7 +9,7 @@ import { parseArgs } from "node:util";
 import fs from "node:fs";
 
 // @ts-ignore
-import { map, buildDocEntryPoints } from "./entryPoints.js";
+import { map, buildDocEntryPoints } from "./entryPoints";
 import { readFileSync } from "fs";
 
 const parsed = parseArgs({
@@ -57,7 +57,7 @@ try {
     map((entryPoint: { dirs: string[] }) => {
       const path = entryPoint.dirs.join("/");
       const mainEntryPointFilePath =
-        `<projectFolder>/dist/${path}/index.d.ts`.replace("//", "/");
+        `<projectFolder>/dist/apollo-client/src/${path}/index.d.ts`.replace("//", "/");
       console.log(
         "\n\nCreating API extractor report for " + mainEntryPointFilePath
       );

@@ -6,7 +6,7 @@ import { terser as minify } from "rollup-plugin-terser";
 import cleanup from "rollup-plugin-cleanup";
 
 const entryPoints = require("./entryPoints");
-const distDir = "./dist";
+const distDir = "./dist/apollo-client/src";
 
 const removeComments = cleanup({
   comments: ["some", /#__PURE__/, /#__NO_SIDE_EFFECTS__/],
@@ -161,6 +161,6 @@ function prepareBundle({
 export default [
   ...entryPoints.map(prepareBundle),
   // Convert the ESM entry point to a single CJS bundle.
-  prepareCJS("./dist/index.js", "./dist/apollo-client.cjs"),
-  prepareCJSMinified("./dist/apollo-client.cjs"),
+  prepareCJS("./dist/apollo-client/src/index.js", "./dist/apollo-client/src/apollo-client.cjs"),
+  prepareCJSMinified("./dist/apollo-client/src/apollo-client.cjs"),
 ];

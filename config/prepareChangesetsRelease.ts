@@ -19,7 +19,7 @@ const path = require("path");
 
 const distRoot = `${__dirname}/../dist`;
 const srcDir = `${__dirname}/..`;
-const destDir = `${srcDir}/dist`;
+const destDir = `${srcDir}/dist/apollo-client/src`;
 
 // recursive copy function
 function copyDir(src: string, dest: string) {

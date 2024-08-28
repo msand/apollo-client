@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+    "rootDir": "../",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noUnusedParameters": false,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "skipLibCheck": true,
     "moduleResolution": "node",
     "importHelpers": true,
