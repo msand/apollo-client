@@ -12,11 +12,12 @@ import { Kind } from "graphql";
 import { Observable } from "../utilities";
 import { ApolloLink } from "../link/core";
 import { HttpLink } from "../link/http";
-import { createFragmentRegistry, InMemoryCache } from "../cache";
+import { createFragmentRegistry } from "../cache";
 import { itAsync } from "../testing";
 import { ObservableStream, spyOnConsole } from "../testing/internal";
 import { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { invariant } from "../utilities/globals";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("ApolloClient", () => {
   describe("constructor", () => {
@@ -40,7 +41,7 @@ describe("ApolloClient", () => {
     it("should create an `HttpLink` instance if `uri` is provided", () => {
       const uri = "http://localhost:4000";
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         uri,
       });
 
@@ -52,7 +53,7 @@ describe("ApolloClient", () => {
       const uri1 = "http://localhost:3000";
       const uri2 = "http://localhost:4000";
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         uri: uri1,
         link: new HttpLink({ uri: uri2 }),
       });
@@ -61,7 +62,7 @@ describe("ApolloClient", () => {
 
     it("should create an empty Link if `uri` and `link` are not provided", () => {
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
       expect(client.link).toBeDefined();
       expect(client.link instanceof ApolloLink).toBeTruthy();
@@ -72,7 +73,7 @@ describe("ApolloClient", () => {
     it("will read some data from the store", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache().restore({
+        cache: new Hermes().restore({
           ROOT_QUERY: {
             a: 1,
             b: 2,
@@ -116,7 +117,7 @@ describe("ApolloClient", () => {
     it("will read some deeply nested data from the store", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache().restore({
+        cache: new Hermes().restore({
           ROOT_QUERY: {
             a: 1,
             b: 2,
@@ -206,7 +207,7 @@ describe("ApolloClient", () => {
     it("will read some data from the store with variables", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache().restore({
+        cache: new Hermes().restore({
           ROOT_QUERY: {
             'field({"literal":true,"value":42})': 1,
             'field({"literal":false,"value":42})': 2,
@@ -234,7 +235,7 @@ describe("ApolloClient", () => {
   it("will read some data from the store with default values", () => {
     const client = new ApolloClient({
       link: ApolloLink.empty(),
-      cache: new InMemoryCache().restore({
+      cache: new Hermes().restore({
         ROOT_QUERY: {
           'field({"literal":true,"value":-1})': 1,
           'field({"literal":false,"value":42})': 2,
@@ -274,7 +275,7 @@ describe("ApolloClient", () => {
     it("will throw an error when there is no fragment", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       expect(() => {
@@ -308,7 +309,7 @@ describe("ApolloClient", () => {
     it("will throw an error when there is more than one fragment but no fragment name", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       expect(() => {
@@ -352,7 +353,7 @@ describe("ApolloClient", () => {
     it("will read some deeply nested data from the store at any id", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache().restore({
+        cache: new Hermes().restore({
           ROOT_QUERY: {
             __typename: "Foo",
             a: 1,
@@ -493,7 +494,7 @@ describe("ApolloClient", () => {
     it("will read some data from the store with variables", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache().restore({
+        cache: new Hermes().restore({
           foo: {
             __typename: "Foo",
             'field({"literal":true,"value":42})': 1,
@@ -522,17 +523,17 @@ describe("ApolloClient", () => {
     it("will return null when an id that can’t be found is provided", () => {
       const client1 = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
       const client2 = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache().restore({
+        cache: new Hermes().restore({
           bar: { __typename: "Foo", a: 1, b: 2, c: 3 },
         }),
       });
       const client3 = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache().restore({
+        cache: new Hermes().restore({
           foo: { __typename: "Foo", a: 1, b: 2, c: 3 },
         }),
       });
@@ -580,7 +581,7 @@ describe("ApolloClient", () => {
     it("will write some data to the store", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       client.writeQuery({
@@ -592,7 +593,7 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toEqual({
+      expect((client.cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -609,7 +610,7 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toEqual({
+      expect((client.cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -629,7 +630,7 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toEqual({
+      expect((client.cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 4,
@@ -642,7 +643,7 @@ describe("ApolloClient", () => {
     it("will write some deeply nested data to the store", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             Query: {
               fields: {
@@ -669,7 +670,7 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
 
       client.writeQuery({
         data: { a: 1, d: { __typename: "D", h: { __typename: "H", i: 7 } } },
@@ -685,7 +686,7 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
 
       client.writeQuery({
         data: {
@@ -724,13 +725,13 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
     });
 
     it("will write some data to the store with variables", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       client.writeQuery({
@@ -750,7 +751,7 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toEqual({
+      expect((client.cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           'field({"literal":true,"value":42})': 1,
@@ -762,7 +763,7 @@ describe("ApolloClient", () => {
     it("will write some data to the store with default values for variables", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       client.writeQuery({
@@ -794,7 +795,7 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toEqual({
+      expect((client.cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           'field({"literal":true,"value":42})': 2,
@@ -807,7 +808,7 @@ describe("ApolloClient", () => {
       using _consoleSpies = spyOnConsole.takeSnapshots("error");
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({
+        cache: new Hermes({
           // Passing an empty map enables the warning:
           possibleTypes: {},
         }),
@@ -840,7 +841,7 @@ describe("ApolloClient", () => {
     it("will throw an error when there is no fragment", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       expect(() => {
@@ -876,7 +877,7 @@ describe("ApolloClient", () => {
     it("will throw an error when there is more than one fragment but no fragment name", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       expect(() => {
@@ -922,7 +923,7 @@ describe("ApolloClient", () => {
     it("will write some deeply nested data into the store at any id", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({ dataIdFromObject: (o: any) => o.id }),
+        cache: new Hermes({ dataIdFromObject: (o: any) => o.id }),
       });
 
       client.writeFragment({
@@ -942,7 +943,7 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
 
       client.writeFragment({
         data: {
@@ -964,7 +965,7 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
 
       client.writeFragment({
         data: { __typename: "Bar", i: 10 },
@@ -976,7 +977,7 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
 
       client.writeFragment({
         data: { __typename: "Bar", j: 11, k: 12 },
@@ -989,7 +990,7 @@ describe("ApolloClient", () => {
         `,
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
 
       client.writeFragment({
         data: {
@@ -1021,7 +1022,7 @@ describe("ApolloClient", () => {
         fragmentName: "fooFragment",
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
 
       client.writeFragment({
         data: { __typename: "Bar", i: 10, j: 11, k: 12 },
@@ -1047,13 +1048,13 @@ describe("ApolloClient", () => {
         fragmentName: "barFragment",
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
     });
 
     it("will write some data to the store with variables", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       client.writeFragment({
@@ -1075,7 +1076,7 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toEqual({
+      expect((client.cache as Hermes).extract()).toEqual({
         __META: {
           extraRootIds: ["foo"],
         },
@@ -1091,7 +1092,7 @@ describe("ApolloClient", () => {
       using _consoleSpies = spyOnConsole.takeSnapshots("error");
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({
+        cache: new Hermes({
           // Passing an empty map enables the warning:
           possibleTypes: {},
         }),
@@ -1157,7 +1158,7 @@ describe("ApolloClient", () => {
       function newClient() {
         return new ApolloClient({
           link,
-          cache: new InMemoryCache({
+          cache: new Hermes({
             typePolicies: {
               Person: {
                 fields: {
@@ -1438,7 +1439,7 @@ describe("ApolloClient", () => {
     it("will write data locally which will then be read back", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({
+        cache: new Hermes({
           dataIdFromObject(object) {
             if (typeof object.__typename === "string") {
               return object.__typename.toLowerCase();
@@ -1589,13 +1590,13 @@ describe("ApolloClient", () => {
         bar: { __typename: "Bar", d: 8, e: 9, f: 6 },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
     });
 
     it("will write data to a specific id", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({
+        cache: new Hermes({
           dataIdFromObject: (o: any) => o.key,
         }),
       });
@@ -1657,13 +1658,13 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
     });
 
     it("will not use a default id getter if __typename is not present", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({
+        cache: new Hermes({
           addTypename: false,
         }),
       });
@@ -1714,7 +1715,7 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toEqual({
+      expect((client.cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -1746,7 +1747,7 @@ describe("ApolloClient", () => {
     it("will not use a default id getter if id and _id are not present", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       client.writeQuery({
@@ -1803,13 +1804,13 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
     });
 
     it("will use a default id getter if __typename and id are present", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       client.writeQuery({
@@ -1840,13 +1841,13 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
     });
 
     it("will use a default id getter if __typename and _id are present", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       client.writeQuery({
@@ -1877,13 +1878,13 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
     });
 
     it("will not use a default id getter if id is present and __typename is not present", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({
+        cache: new Hermes({
           addTypename: false,
         }),
       });
@@ -1911,7 +1912,7 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toEqual({
+      expect((client.cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -1932,7 +1933,7 @@ describe("ApolloClient", () => {
     it("will not use a default id getter if _id is present but __typename is not present", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({
+        cache: new Hermes({
           addTypename: false,
         }),
       });
@@ -1960,7 +1961,7 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toEqual({
+      expect((client.cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -1981,7 +1982,7 @@ describe("ApolloClient", () => {
     it("will not use a default id getter if either _id or id is present when __typename is not also present", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache({
+        cache: new Hermes({
           addTypename: false,
         }),
       });
@@ -2036,13 +2037,13 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
     });
 
     it("will use a default id getter if one is not specified and __typename is present along with either _id or id", () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       client.writeQuery({
@@ -2101,7 +2102,7 @@ describe("ApolloClient", () => {
         },
       });
 
-      expect((client.cache as InMemoryCache).extract()).toMatchSnapshot();
+      expect((client.cache as Hermes).extract()).toMatchSnapshot();
     });
   });
 
@@ -2113,7 +2114,7 @@ describe("ApolloClient", () => {
       () => {
         const client = new ApolloClient({
           link: ApolloLink.empty(),
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
         });
         client.disableNetworkFetches = true;
 
@@ -2143,7 +2144,7 @@ describe("ApolloClient", () => {
       () => {
         const client = new ApolloClient({
           link: ApolloLink.empty(),
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
         });
         client.disableNetworkFetches = false;
 
@@ -2176,7 +2177,7 @@ describe("ApolloClient", () => {
 
   describe("watchFragment", () => {
     it("if all data is available, `complete` is `true`", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -2218,7 +2219,7 @@ describe("ApolloClient", () => {
       }
     });
     it("cache writes emit a new value", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -2282,7 +2283,7 @@ describe("ApolloClient", () => {
       }
     });
     it("if only partial data is available, `complete` is `false`", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -2330,7 +2331,7 @@ describe("ApolloClient", () => {
       }
     });
     it("if no data is written after observable is subscribed to, next is never called", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -2365,7 +2366,7 @@ describe("ApolloClient", () => {
     });
 
     it("supports the @nonreactive directive", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -2420,7 +2421,7 @@ describe("ApolloClient", () => {
       );
     });
     it("works with `variables`", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -2464,7 +2465,7 @@ describe("ApolloClient", () => {
       }
     });
     it("supports the @includes directive with `variables`", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -2517,7 +2518,7 @@ describe("ApolloClient", () => {
     });
 
     it("works with nested fragments", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -2575,7 +2576,7 @@ describe("ApolloClient", () => {
 
     it("can use the fragment registry for nested fragments", async () => {
       const fragments = createFragmentRegistry();
-      const cache = new InMemoryCache({ fragments });
+      const cache = new Hermes({ fragments });
 
       fragments.register(gql`
         fragment ItemNestedFragment on Item {
@@ -2638,7 +2639,7 @@ describe("ApolloClient", () => {
       () => {
         const client = new ApolloClient({
           link: ApolloLink.empty(),
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
         });
         expect(client.defaultOptions).toEqual({});
       }
@@ -2652,7 +2653,7 @@ describe("ApolloClient", () => {
       };
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         defaultOptions,
       });
       expect(client.defaultOptions).toEqual(defaultOptions);
@@ -2667,7 +2668,7 @@ describe("ApolloClient", () => {
 
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         defaultOptions,
       });
 
@@ -2709,7 +2710,7 @@ describe("ApolloClient", () => {
     it("should be able to set all default query options", () => {
       new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         defaultOptions: {
           query: {
             query: { kind: Kind.DOCUMENT, definitions: [] },
@@ -2731,7 +2732,7 @@ describe("ApolloClient", () => {
     it("should remove all data from the store", async () => {
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
       interface Data {
         a: number;
@@ -2760,7 +2761,7 @@ describe("ApolloClient", () => {
   describe("setLink", () => {
     it("should override default link with newly set link", async () => {
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
       expect(client.link).toBeDefined();
 
@@ -2819,7 +2820,7 @@ describe("ApolloClient", () => {
 
         const client = new ApolloClient({
           link: new ApolloLink(linkFn),
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
         });
 
         const query = gql`

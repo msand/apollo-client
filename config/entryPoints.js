@@ -129,7 +129,7 @@ function arraysEqualUpTo(a, b, end) {
 }
 
 exports.buildDocEntryPoints = () => {
-  const dist = path.resolve(__dirname, "../dist");
+  const dist = path.resolve(__dirname, "../dist", "apollo-client", "src");
   const entryPoints = exports.map((entryPoint) => {
     return `export * from "${dist}/${entryPoint.dirs.join("/")}/index.d.ts";`;
   });

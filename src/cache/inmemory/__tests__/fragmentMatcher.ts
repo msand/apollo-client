@@ -1,17 +1,17 @@
 import gql from "graphql-tag";
 
 import { itAsync } from "../../../testing";
-import { InMemoryCache } from "../inMemoryCache";
 import { visit, FragmentDefinitionNode } from "graphql";
 import { hasOwn } from "../helpers";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("fragment matching", () => {
   it("can match exact types with or without possibleTypes", () => {
-    const cacheWithoutPossibleTypes = new InMemoryCache({
+    const cacheWithoutPossibleTypes = new Hermes({
       addTypename: true,
     });
 
-    const cacheWithPossibleTypes = new InMemoryCache({
+    const cacheWithPossibleTypes = new Hermes({
       addTypename: true,
       possibleTypes: {
         Animal: ["Cat", "Dog"],
@@ -57,7 +57,7 @@ describe("fragment matching", () => {
   });
 
   it("can match interface subtypes", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       addTypename: true,
       possibleTypes: {
         Animal: ["Cat", "Dog"],
@@ -89,7 +89,7 @@ describe("fragment matching", () => {
   });
 
   it("can match union member types", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       addTypename: true,
       possibleTypes: {
         Status: ["PASSING", "FAILING", "SKIPPED"],
@@ -139,7 +139,7 @@ describe("fragment matching", () => {
   });
 
   it("can match indirect subtypes while avoiding cycles", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       addTypename: true,
       possibleTypes: {
         Animal: ["Animal", "Bug", "Mammal"],
@@ -187,7 +187,7 @@ describe("fragment matching", () => {
   });
 
   it("can match against the root Query", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       addTypename: true,
     });
 
@@ -243,7 +243,7 @@ describe("policies.fragmentMatches", () => {
   });
 
   itAsync("can infer fuzzy subtypes heuristically", (resolve, reject) => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       possibleTypes: {
         A: ["B", "C"],
         B: ["D"],

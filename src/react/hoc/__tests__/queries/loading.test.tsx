@@ -9,7 +9,7 @@ import {
   WatchQueryFetchPolicy,
 } from "../../../../core";
 import { ApolloProvider } from "../../../context";
-import { InMemoryCache as Cache } from "../../../../cache";
+import { Hermes as Cache } from "apollo-cache-hermes";
 import { itAsync, mockSingleLink } from "../../../../testing";
 import { graphql } from "../../graphql";
 import { ChildProps, DataValue } from "../../types";

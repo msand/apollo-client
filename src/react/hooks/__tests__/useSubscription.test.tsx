@@ -10,7 +10,7 @@ import {
   TypedDocumentNode,
 } from "../../../core";
 import { PROTOCOL_ERRORS_SYMBOL } from "../../../errors";
-import { InMemoryCache as Cache } from "../../../cache";
+import { Hermes as Cache } from "apollo-cache-hermes";
 import { ApolloProvider } from "../../context";
 import { MockSubscriptionLink } from "../../../testing";
 import { useSubscription } from "../useSubscription";

@@ -1,6 +1,5 @@
 import gql from "graphql-tag";
 import { EntityStore, supportsResultCaching } from "../entityStore";
-import { InMemoryCache } from "../inMemoryCache";
 import { DocumentNode } from "graphql";
 import { StoreObject } from "../types";
 import { ApolloCache } from "../../core/cache";
@@ -16,10 +15,11 @@ import { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { stringifyForDisplay } from "../../../utilities";
 import { InvariantError } from "../../../utilities/globals";
 import { spyOnConsole } from "../../../testing/internal";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("EntityStore", () => {
   it("should support result caching if so configured", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const storeWithResultCaching = new EntityStore.Root({
       policies: cache.policies,
@@ -59,7 +59,7 @@ describe("EntityStore", () => {
   });
 
   function newBookAuthorCache() {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       resultCaching: true,
       dataIdFromObject(value: any) {
         switch (value && value.__typename) {
@@ -965,7 +965,7 @@ describe("EntityStore", () => {
   });
 
   it("cache.gc is not confused by StoreObjects with stray __ref fields", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Person: {
           keyFields: ["name"],
@@ -1048,7 +1048,7 @@ describe("EntityStore", () => {
       }
     `;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       canonizeResults: true,
       typePolicies: {
         Query: {
@@ -1361,7 +1361,7 @@ describe("EntityStore", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const TedChiangData = {
       __typename: "Author",
@@ -1509,7 +1509,7 @@ describe("EntityStore", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const TedChiangData = {
       __typename: "Author",
@@ -1652,7 +1652,7 @@ describe("EntityStore", () => {
   });
 
   it("supports cache.identify(reference)", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Task: {
           keyFields: ["uuid"],
@@ -1720,7 +1720,7 @@ describe("EntityStore", () => {
       }
     `;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         ABCs: {
           keyFields: ["b", "a", "c"],
@@ -1878,7 +1878,7 @@ describe("EntityStore", () => {
   });
 
   it("gracefully handles eviction amid optimistic updates", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const query = gql`
       query {
         book {
@@ -2038,7 +2038,7 @@ describe("EntityStore", () => {
   });
 
   it("supports toReference(obj, true) to persist obj", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -2349,7 +2349,7 @@ describe("EntityStore", () => {
   });
 
   it("supports toReference(id)", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Book: {
           fields: {
@@ -2459,7 +2459,7 @@ describe("EntityStore", () => {
   it("should not over-invalidate fields with keyArgs", () => {
     const isbnsWeHaveRead: string[] = [];
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       canonizeResults: true,
       typePolicies: {
         Query: {
@@ -2659,7 +2659,7 @@ describe("EntityStore", () => {
   });
 
   it("Refuses to merge { __ref } objects as StoreObjects", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {

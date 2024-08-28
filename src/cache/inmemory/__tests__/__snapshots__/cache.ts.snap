@@ -307,7 +307,7 @@ Object {
 }
 `;
 
-exports[`InMemoryCache#modify should allow invalidation using details.INVALIDATE 1`] = `
+exports[`Hermes#modify should allow invalidation using details.INVALIDATE 1`] = `
 Object {
   "Author:{\\"name\\":\\"Maria Dahvana Headley\\"}": Object {
     "__typename": "Author",

@@ -1,7 +1,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
-const distRoot = path.join(__dirname, "..", "dist");
+const distRoot = path.join(__dirname, "..", "dist", "apollo-client", "src");
 const versionPath = path.join(distRoot, "version.js");
 const pkgJsonPath = path.join(__dirname, "..", "package.json");
 

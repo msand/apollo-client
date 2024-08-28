@@ -7,7 +7,7 @@ import {
   ObservableSubscription,
 } from "../../../utilities/observables/Observable";
 import { ApolloLink } from "../../../link/core";
-import { InMemoryCache } from "../../../cache/inmemory/inMemoryCache";
+import { Hermes } from "apollo-cache-hermes";
 
 // mocks
 import { itAsync, MockSubscriptionLink } from "../../../testing/core";
@@ -59,7 +59,7 @@ describe("Link interactions", () => {
       const link = ApolloLink.from([evictionLink, mockLink]);
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           link,
         })
       );
@@ -107,7 +107,7 @@ describe("Link interactions", () => {
       const link = new MockSubscriptionLink();
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           link,
         })
       );
@@ -183,7 +183,7 @@ describe("Link interactions", () => {
       const link = new MockSubscriptionLink();
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           link,
         })
       );
@@ -265,7 +265,7 @@ describe("Link interactions", () => {
       const link = ApolloLink.from([evictionLink, mockLink]);
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           link,
         })
       );
@@ -309,7 +309,7 @@ describe("Link interactions", () => {
       const link = ApolloLink.from([evictionLink, mockLink]);
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           link,
         })
       );
@@ -355,7 +355,7 @@ describe("Link interactions", () => {
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             Query: {
               fields: {
@@ -434,7 +434,7 @@ describe("Link interactions", () => {
     const queryManager = new QueryManager(
       getDefaultOptionsForQueryManagerTests({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       })
     );
 

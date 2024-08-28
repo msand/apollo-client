@@ -1,4 +1,4 @@
-import { distDir } from "./helpers.ts";
+import { distDir } from "./helpers";
 import fs from "node:fs";
 import path from "node:path";
 

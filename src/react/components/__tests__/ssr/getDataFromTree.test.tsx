@@ -4,7 +4,6 @@ import gql from "graphql-tag";
 import { DocumentNode } from "graphql";
 
 import { ApolloClient } from "../../../../core";
-import { InMemoryCache as Cache } from "../../../../cache";
 import {
   ApolloProvider,
   getApolloContext,
@@ -13,6 +12,7 @@ import {
 import { getDataFromTree } from "../../../ssr";
 import { itAsync, mockSingleLink } from "../../../../testing";
 import { Query } from "../../Query";
+import { Hermes as Cache } from "apollo-cache-hermes";
 
 describe("SSR", () => {
   describe("`getDataFromTree`", () => {

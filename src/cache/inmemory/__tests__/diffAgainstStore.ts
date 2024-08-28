@@ -4,17 +4,17 @@ import { StoreReader } from "../readFromStore";
 import { StoreWriter } from "../writeToStore";
 import { defaultDataIdFromObject } from "../helpers";
 import { NormalizedCache, Reference } from "../types";
-import { InMemoryCache } from "../inMemoryCache";
 import {
   defaultNormalizedCacheFactory,
   writeQueryToStore,
   withError,
 } from "./helpers";
+import { Hermes } from "apollo-cache-hermes";
 
 disableFragmentWarnings();
 
 describe("diffing queries against the store", () => {
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     dataIdFromObject: defaultDataIdFromObject,
   });
   const reader = new StoreReader({ cache });
@@ -121,7 +121,7 @@ describe("diffing queries against the store", () => {
 
   it("caches root queries both under the ID of the node and the query name", () => {
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         typePolicies: {
           Person: {
             keyFields: ["id"],
@@ -492,7 +492,7 @@ describe("diffing queries against the store", () => {
       },
     };
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       dataIdFromObject(obj: any) {
         return obj.id;
       },
@@ -840,7 +840,7 @@ describe("diffing queries against the store", () => {
       };
 
       const writer = new StoreWriter(
-        new InMemoryCache({
+        new Hermes({
           dataIdFromObject: (obj: any) => obj.id,
         })
       );
@@ -966,7 +966,7 @@ describe("diffing queries against the store", () => {
         }
       `;
 
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -1171,7 +1171,7 @@ describe("diffing queries against the store", () => {
       check(
         writeQueryToStore({
           writer: new StoreWriter(
-            new InMemoryCache({
+            new Hermes({
               dataIdFromObject: void 0,
             })
           ),
@@ -1186,7 +1186,7 @@ describe("diffing queries against the store", () => {
       check(
         writeQueryToStore({
           writer: new StoreWriter(
-            new InMemoryCache({
+            new Hermes({
               dataIdFromObject: defaultDataIdFromObject,
             })
           ),

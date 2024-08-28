@@ -12,8 +12,8 @@ import { act } from "@testing-library/react";
 import { UseFragmentOptions, useFragment } from "../useFragment";
 import { MockedProvider } from "../../../testing";
 import { ApolloProvider } from "../../context";
+import { Hermes } from "apollo-cache-hermes";
 import {
-  InMemoryCache,
   gql,
   TypedDocumentNode,
   Reference,
@@ -68,7 +68,7 @@ describe("useFragment", () => {
   }
 
   it("can rerender individual list elements", async () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Item: {
           fields: {
@@ -307,7 +307,7 @@ describe("useFragment", () => {
         text
       }
     `;
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const item = { __typename: "Item", id: 1, text: "Item #1" };
     cache.writeFragment({
       fragment: ItemFragment,
@@ -340,7 +340,7 @@ describe("useFragment", () => {
         text
       }
     `;
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const item = { __typename: "Item", id: 1, text: "Item #1" };
     cache.writeFragment({
       fragment: ItemFragment,
@@ -429,7 +429,7 @@ describe("useFragment", () => {
   ])(
     "Parent list component can use @nonreactive to avoid rerendering",
     async (query) => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -755,7 +755,7 @@ describe("useFragment", () => {
   );
 
   it("List can use useFragment with ListFragment", async () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Item: {
           fields: {
@@ -997,7 +997,7 @@ describe("useFragment", () => {
   });
 
   it("useFragment(...).missing is a tree describing missing fields", async () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1222,7 +1222,7 @@ describe("useFragment", () => {
       }
     `;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Item: {
           fields: {
@@ -1361,7 +1361,7 @@ describe("useFragment", () => {
 
   it("returns correct data when options change", async () => {
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
     type User = { __typename: "User"; id: number; name: string };
     const fragment: TypedDocumentNode<User> = gql`
@@ -1423,7 +1423,7 @@ describe("useFragment", () => {
     };
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const fragment: TypedDocumentNode<Post> = gql`
@@ -1490,7 +1490,7 @@ describe("useFragment", () => {
     };
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const fragment: TypedDocumentNode<Post> = gql`
@@ -1559,7 +1559,7 @@ describe("useFragment", () => {
   });
 
   describe("tests with incomplete data", () => {
-    let cache: InMemoryCache, wrapper: React.FunctionComponent;
+    let cache: Hermes, wrapper: React.FunctionComponent;
     const ItemFragment = gql`
       fragment ItemFragment on Item {
         id
@@ -1568,7 +1568,7 @@ describe("useFragment", () => {
     `;
 
     beforeEach(() => {
-      cache = new InMemoryCache();
+      cache = new Hermes();
       wrapper = ({ children }: any) => (
         <MockedProvider cache={cache}>{children}</MockedProvider>
       );
@@ -1602,7 +1602,7 @@ describe("useFragment", () => {
   });
 
   describe("return value `complete` property", () => {
-    let cache: InMemoryCache, wrapper: React.FunctionComponent;
+    let cache: Hermes, wrapper: React.FunctionComponent;
     const ItemFragment = gql`
       fragment ItemFragment on Item {
         id
@@ -1611,7 +1611,7 @@ describe("useFragment", () => {
     `;
 
     beforeEach(() => {
-      cache = new InMemoryCache();
+      cache = new Hermes();
       wrapper = ({ children }: any) => (
         <MockedProvider cache={cache}>{children}</MockedProvider>
       );
@@ -1709,7 +1709,7 @@ describe("has the same timing as `useQuery`", () => {
       ${itemFragment}
     `;
     let observer: SubscriptionObserver<FetchResult>;
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const client = new ApolloClient({
       cache,
       link: new ApolloLink(
@@ -1779,7 +1779,7 @@ describe("has the same timing as `useQuery`", () => {
       }
       ${itemFragment}
     `;
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const client = new ApolloClient({
       cache,
     });
@@ -1871,7 +1871,7 @@ describe("has the same timing as `useQuery`", () => {
       }
       ${itemFragment}
     `;
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const client = new ApolloClient({
       cache,
     });

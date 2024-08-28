@@ -3,8 +3,8 @@ import gql from "graphql-tag";
 import { Observable } from "../../utilities";
 import { ApolloLink } from "../../link/core";
 import { ApolloClient } from "../../core";
-import { InMemoryCache } from "../../cache";
 import { itAsync } from "../../testing";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("Basic functionality", () => {
   itAsync("should not break subscriptions", (resolve, reject) => {
@@ -19,7 +19,7 @@ describe("Basic functionality", () => {
     );
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link,
       resolvers: {
         Query: {
@@ -54,7 +54,7 @@ describe("Basic functionality", () => {
 
       let subCounter = 0;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
         resolvers: {
           Subscription: {

@@ -4,10 +4,10 @@ import { DocumentNode } from "graphql";
 import gql from "graphql-tag";
 import { mockSingleLink } from "../../../testing";
 import { ApolloClient } from "../../../core";
-import { InMemoryCache } from "../../../cache";
 import { ApolloProvider } from "../../context";
 import { useLazyQuery } from "../../hooks";
 import { renderToStringWithData } from "../../ssr";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("useLazyQuery Hook SSR", () => {
   const CAR_QUERY: DocumentNode = gql`
@@ -38,7 +38,7 @@ describe("useLazyQuery Hook SSR", () => {
     });
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link,
       ssrMode: true,
     });

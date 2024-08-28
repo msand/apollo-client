@@ -15,12 +15,8 @@ import {
   concatPagination,
 } from "../utilities";
 
-import {
-  ApolloCache,
-  InMemoryCache,
-  InMemoryCacheConfig,
-  FieldMergeFunction,
-} from "../cache";
+import { ApolloCache, InMemoryCacheConfig, FieldMergeFunction } from "../cache";
+import { Hermes } from "apollo-cache-hermes";
 
 import { itAsync, mockSingleLink, subscribeAndCount } from "../testing";
 
@@ -53,7 +49,7 @@ describe("updateQuery on a simple query", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const obsHandle = client.watchQuery({
@@ -119,7 +115,7 @@ describe("updateQuery on a query with required and optional variables", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const obsHandle = client.watchQuery({
@@ -247,7 +243,7 @@ describe("fetchMore on an observable query", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -282,7 +278,7 @@ describe("fetchMore on an observable query", () => {
         },
         ...mockedResponses
       ).setOnError(reject),
-      cache: new InMemoryCache(cacheConfig),
+      cache: new Hermes(cacheConfig),
     });
 
     return client.watchQuery({
@@ -553,7 +549,7 @@ describe("fetchMore on an observable query", () => {
             })
         ),
 
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             Query: {
               fields: {
@@ -1056,7 +1052,7 @@ describe("fetchMore on an observable query", () => {
         );
       };
 
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -1278,7 +1274,7 @@ describe("fetchMore on an observable query", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const observable = client.watchQuery({
@@ -1337,7 +1333,7 @@ describe("fetchMore on an observable query", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             Entry: {
               fields: {
@@ -1455,7 +1451,7 @@ describe("fetchMore on an observable query", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const observable = client.watchQuery({
@@ -1581,7 +1577,7 @@ describe("fetchMore on an observable query with connection", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -1616,7 +1612,7 @@ describe("fetchMore on an observable query with connection", () => {
         },
         ...mockedResponses
       ).setOnError(reject),
-      cache: new InMemoryCache(cacheConfig),
+      cache: new Hermes(cacheConfig),
     });
 
     return client.watchQuery({
@@ -1738,7 +1734,7 @@ describe("fetchMore on an observable query with connection", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const observable = client.watchQuery({
@@ -1800,7 +1796,7 @@ describe("fetchMore on an observable query with connection", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             Entry: {
               fields: {

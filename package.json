@@ -13,12 +13,12 @@
   ],
   "author": "packages@apollographql.com",
   "license": "MIT",
-  "main": "./dist/main.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/apollo-client/src/main.cjs",
+  "module": "./dist/apollo-client/src/index.js",
+  "types": "./dist/apollo-client/src/index.d.ts",
   "sideEffects": false,
   "react-native": {
-    "./dist/cache/inmemory/fixPolyfills.js": "./dist/cache/inmemory/fixPolyfills.native.js",
+    "./dist/apollo-client/src/cache/inmemory/fixPolyfills.js": "./dist/apollo-client/src/cache/inmemory/fixPolyfills.native.js",
     "react-dom/server": false
   },
   "repository": {
@@ -50,7 +50,7 @@
     "lint": "eslint 'src/**/*.{[jt]s,[jt]sx}'",
     "inline-inherit-doc": "ts-node-script config/inlineInheritDoc.ts",
     "test": "node --expose-gc ./node_modules/jest/bin/jest.js --config ./config/jest.config.js",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --config ./config/jest.config.js --runInBand --testTimeout 99999 --logHeapUsage",
+    "test:debug": "node --expose-gc --inspect-brk node_modules/.bin/jest --config ./config/jest.config.js --runInBand --testTimeout 99999 --logHeapUsage",
     "test:ci": "TEST_ENV=ci npm run test:coverage -- --logHeapUsage",
     "test:watch": "jest --config ./config/jest.config.js --watch",
     "test:memory": "npm i && npm run build && cd scripts/memory && npm i && npm test",
@@ -95,6 +95,7 @@
     "@wry/caches": "^1.0.0",
     "@wry/equality": "^0.5.6",
     "@wry/trie": "^0.5.0",
+    "apollo-cache-hermes": "file:../src",
     "graphql-tag": "^2.12.6",
     "hoist-non-react-statics": "^3.3.2",
     "optimism": "^0.18.0",

@@ -14,6 +14,7 @@ import { InvariantError } from "ts-invariant";
 import { equal } from "@wry/equality";
 import { expectTypeOf } from "expect-type";
 
+import { Hermes } from "apollo-cache-hermes";
 import {
   gql,
   ApolloCache,
@@ -21,7 +22,6 @@ import {
   ApolloError,
   ApolloLink,
   DocumentNode,
-  InMemoryCache,
   Observable,
   OperationVariables,
   SubscribeToMoreOptions,
@@ -107,7 +107,7 @@ function renderSuspenseHook<Result, Props>(
   const client =
     options.client ||
     new ApolloClient({
-      cache: options.cache || new InMemoryCache(),
+      cache: options.cache || new Hermes(),
       link: options.link || new MockLink(mocks),
     });
 
@@ -336,7 +336,7 @@ describe("useSuspenseQuery", () => {
     INVALID_FETCH_POLICIES.forEach((fetchPolicy) => {
       expect(() => {
         const client = new ApolloClient({
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           link: new MockLink([]),
           defaultOptions: {
             watchQuery: {
@@ -385,7 +385,7 @@ describe("useSuspenseQuery", () => {
     });
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
     });
 
@@ -505,7 +505,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { result } = renderSuspenseHook(() => useSuspenseQuery(query), {
@@ -543,7 +543,7 @@ describe("useSuspenseQuery", () => {
       value: number;
     }
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Result: {
           keyFields: false,
@@ -594,7 +594,7 @@ describe("useSuspenseQuery", () => {
       value: number;
     }
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       canonizeResults: true,
       typePolicies: {
         Result: {
@@ -645,7 +645,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new ApolloLink(() => Observable.of(mocks[0].result)),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { result, unmount } = renderSuspenseHook(
@@ -675,7 +675,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { rerender, result, unmount } = renderSuspenseHook(
@@ -719,7 +719,7 @@ describe("useSuspenseQuery", () => {
           result: { data: { character: { id: "1", name: "Client 1" } } },
         },
       ]),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const client2 = new ApolloClient({
@@ -729,7 +729,7 @@ describe("useSuspenseQuery", () => {
           result: { data: { character: { id: "1", name: "Client 2" } } },
         },
       ]),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { rerender, result, unmount } = renderSuspenseHook(
@@ -777,7 +777,7 @@ describe("useSuspenseQuery", () => {
     const link = new MockSubscriptionLink();
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -836,7 +836,7 @@ describe("useSuspenseQuery", () => {
     const link = new MockSubscriptionLink();
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       defaultOptions: {
         react: {
           suspense: {
@@ -908,7 +908,7 @@ describe("useSuspenseQuery", () => {
     });
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -953,7 +953,7 @@ describe("useSuspenseQuery", () => {
     const link = new MockSubscriptionLink();
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       defaultOptions: {
         react: {
           suspense: {
@@ -1004,14 +1004,14 @@ describe("useSuspenseQuery", () => {
       link: new ApolloLink(() =>
         Observable.of({ data: { greeting: "global hello" } })
       ),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const localClient = new ApolloClient({
       link: new ApolloLink(() =>
         Observable.of({ data: { greeting: "local hello" } })
       ),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { result, renders } = renderSuspenseHook(
@@ -1039,14 +1039,14 @@ describe("useSuspenseQuery", () => {
       link: new ApolloLink(() =>
         Observable.of({ data: { greeting: "global hello" } })
       ),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const localClient = new ApolloClient({
       link: new ApolloLink(() =>
         Observable.of({ data: { greeting: "local hello" } })
       ),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { result, renders } = renderSuspenseHook(
@@ -1081,7 +1081,7 @@ describe("useSuspenseQuery", () => {
       link: new ApolloLink(() =>
         Observable.of({ data: { greeting: "hello" } })
       ),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { result } = renderSuspenseHook(() => useSuspenseQuery(query), {
@@ -1142,7 +1142,7 @@ describe("useSuspenseQuery", () => {
     const { query } = useSimpleQueryCase();
 
     const client1 = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink([
         {
           request: { query },
@@ -1152,7 +1152,7 @@ describe("useSuspenseQuery", () => {
     });
 
     const client2 = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink([
         {
           request: { query },
@@ -1245,7 +1245,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function Spinner({ name }: { name: string }) {
@@ -1550,7 +1550,7 @@ describe("useSuspenseQuery", () => {
     const { query, mocks } = useVariablesQueryCase();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
     });
 
@@ -1998,7 +1998,7 @@ describe("useSuspenseQuery", () => {
     const { query, mocks } = useVariablesQueryCase();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
     });
 
@@ -2078,7 +2078,7 @@ describe("useSuspenseQuery", () => {
   it('does not suspend when data is in the cache and using a "cache-first" fetch policy', async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query,
@@ -2111,7 +2111,7 @@ describe("useSuspenseQuery", () => {
     let fetchCount = 0;
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const link = new ApolloLink(() => {
       return new Observable((observer) => {
@@ -2162,7 +2162,7 @@ describe("useSuspenseQuery", () => {
       },
     ];
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query: partialQuery,
@@ -2218,7 +2218,7 @@ describe("useSuspenseQuery", () => {
       },
     ];
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query: partialQuery,
@@ -2276,7 +2276,7 @@ describe("useSuspenseQuery", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query: partialQuery,
@@ -2343,7 +2343,7 @@ describe("useSuspenseQuery", () => {
   it('suspends when data is in the cache and using a "network-only" fetch policy', async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query,
@@ -2399,7 +2399,7 @@ describe("useSuspenseQuery", () => {
       },
     ];
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query: partialQuery,
@@ -2439,7 +2439,7 @@ describe("useSuspenseQuery", () => {
   it('suspends and does not overwrite cache when data is in the cache and using a "no-cache" fetch policy', async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query,
@@ -2476,7 +2476,7 @@ describe("useSuspenseQuery", () => {
   it('maintains results when rerendering a query using a "no-cache" fetch policy', async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const { result, rerender, renders } = renderSuspenseHook(
       () => useSuspenseQuery(query, { fetchPolicy: "no-cache" }),
@@ -2551,7 +2551,7 @@ describe("useSuspenseQuery", () => {
       },
     ];
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query: partialQuery,
@@ -2611,7 +2611,7 @@ describe("useSuspenseQuery", () => {
   it('does not suspend when data is in the cache and using a "cache-and-network" fetch policy', async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query,
@@ -2678,7 +2678,7 @@ describe("useSuspenseQuery", () => {
       },
     ];
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query: partialQuery,
@@ -2736,7 +2736,7 @@ describe("useSuspenseQuery", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query: partialQuery,
@@ -2809,7 +2809,7 @@ describe("useSuspenseQuery", () => {
     async (fetchPolicy) => {
       const { query, mocks } = useVariablesQueryCase();
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const { result } = renderSuspenseHook(
         ({ id }) => useSuspenseQuery(query, { fetchPolicy, variables: { id } }),
@@ -2829,7 +2829,7 @@ describe("useSuspenseQuery", () => {
   it('does not write to the cache when using a "no-cache" fetch policy', async () => {
     const { query, mocks } = useVariablesQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const { result } = renderSuspenseHook(
       ({ id }) =>
@@ -2856,7 +2856,7 @@ describe("useSuspenseQuery", () => {
       const { query, mocks } = useSimpleQueryCase();
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new MockLink(mocks),
       });
 
@@ -2902,7 +2902,7 @@ describe("useSuspenseQuery", () => {
     const { query, mocks } = useSimpleQueryCase();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
     });
 
@@ -3178,7 +3178,7 @@ describe("useSuspenseQuery", () => {
       const { query, mocks } = useSimpleQueryCase();
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new MockLink(mocks),
       });
 
@@ -3211,7 +3211,7 @@ describe("useSuspenseQuery", () => {
     const { query, mocks } = useSimpleQueryCase();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
     });
 
@@ -3250,7 +3250,7 @@ describe("useSuspenseQuery", () => {
   it("uses the default fetch policy from the client when none provided in options", async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const client = new ApolloClient({
       cache,
@@ -3288,7 +3288,7 @@ describe("useSuspenseQuery", () => {
     const { query, mocks } = useVariablesQueryCase();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
       defaultOptions: {
         watchQuery: {
@@ -3323,7 +3323,7 @@ describe("useSuspenseQuery", () => {
     const { query, mocks } = useVariablesQueryCase();
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
       defaultOptions: {
         watchQuery: {
@@ -3369,7 +3369,7 @@ describe("useSuspenseQuery", () => {
     `;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink((operation) => {
         return new Observable((observer) => {
           observer.next({ data: { vars: operation.variables } });
@@ -3440,7 +3440,7 @@ describe("useSuspenseQuery", () => {
     `;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink((operation) => {
         return new Observable((observer) => {
           observer.next({ data: { vars: operation.variables } });
@@ -3493,7 +3493,7 @@ describe("useSuspenseQuery", () => {
     `;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new ApolloLink((operation) => {
         return new Observable((observer) => {
           const { valueA, valueB } = operation.getContext();
@@ -3580,7 +3580,7 @@ describe("useSuspenseQuery", () => {
     });
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
     });
 
@@ -3628,7 +3628,7 @@ describe("useSuspenseQuery", () => {
     ];
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
     });
 
@@ -3847,7 +3847,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { result, renders } = renderSuspenseHook(
@@ -3971,7 +3971,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { result, renders } = renderSuspenseHook(
@@ -4299,7 +4299,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -4831,7 +4831,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -4889,7 +4889,7 @@ describe("useSuspenseQuery", () => {
   it("suspends when refetching after returning cached data for the initial fetch", async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query,
@@ -4983,7 +4983,7 @@ describe("useSuspenseQuery", () => {
   it("properly uses cache field policies when calling `fetchMore` without `updateQuery`", async () => {
     const { data, query, link } = usePaginatedCase();
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -5055,7 +5055,7 @@ describe("useSuspenseQuery", () => {
     ];
 
     const mergeParams: [number[] | undefined, number[]][] = [];
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -5131,7 +5131,7 @@ describe("useSuspenseQuery", () => {
     ];
 
     const mergeParams: [number[] | undefined, number[]][] = [];
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -5210,7 +5210,7 @@ describe("useSuspenseQuery", () => {
     ];
 
     const mergeParams: [number[] | undefined, number[]][] = [];
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -5262,7 +5262,7 @@ describe("useSuspenseQuery", () => {
   it("does not suspend when `skip` is true", async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const { result, renders } = renderSuspenseHook(
       () => useSuspenseQuery(query, { skip: true }),
@@ -5280,7 +5280,7 @@ describe("useSuspenseQuery", () => {
   it("does not suspend when using `skipToken` token as options", async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const { result, renders } = renderSuspenseHook(
       () => useSuspenseQuery(query, skipToken),
@@ -5298,7 +5298,7 @@ describe("useSuspenseQuery", () => {
   it("suspends when `skip` becomes `false` after it was `true`", async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const { result, renders, rerender } = renderSuspenseHook(
       ({ skip }) => useSuspenseQuery(query, { skip }),
@@ -5378,7 +5378,7 @@ describe("useSuspenseQuery", () => {
   it("renders skip result, does not suspend, and maintains `data` when `skip` becomes `true` after it was `false`", async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const { result, renders, rerender } = renderSuspenseHook(
       ({ skip }) => useSuspenseQuery(query, { skip }),
@@ -5424,7 +5424,7 @@ describe("useSuspenseQuery", () => {
   it("renders skip result, does not suspend, and maintains `data` when skipping a query with `skipToken` as options after it was enabled", async () => {
     const { query, mocks } = useSimpleQueryCase();
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const { result, renders, rerender } = renderSuspenseHook(
       ({ skip }) => useSuspenseQuery(query, skip ? skipToken : void 0),
@@ -5749,7 +5749,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -5846,7 +5846,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -5946,7 +5946,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -6098,7 +6098,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     const { result, rerender, renders } = renderSuspenseHook(
@@ -6162,7 +6162,7 @@ describe("useSuspenseQuery", () => {
       results: Result[];
     }
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Result: {
           keyFields: false,
@@ -6250,7 +6250,7 @@ describe("useSuspenseQuery", () => {
     ];
 
     const mergeParams: [number[] | undefined, number[]][] = [];
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -6389,7 +6389,7 @@ describe("useSuspenseQuery", () => {
       },
     ];
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query: partialQuery,
@@ -6488,7 +6488,7 @@ describe("useSuspenseQuery", () => {
       },
     ];
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query,
@@ -6620,7 +6620,7 @@ describe("useSuspenseQuery", () => {
       },
     ];
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query,
@@ -6738,7 +6738,7 @@ describe("useSuspenseQuery", () => {
     ];
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       link: new MockLink(mocks),
     });
 
@@ -6988,7 +6988,7 @@ describe("useSuspenseQuery", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query,
@@ -7049,7 +7049,7 @@ describe("useSuspenseQuery", () => {
     `;
 
     const link = new MockSubscriptionLink();
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     // We are intentionally writing partial data to the cache. Supress console
     // warnings to avoid unnecessary noise in the test.
@@ -7189,7 +7189,7 @@ describe("useSuspenseQuery", () => {
     `;
 
     const link = new MockSubscriptionLink();
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const client = new ApolloClient({ cache, link });
 
     cache.writeQuery({
@@ -7629,7 +7629,7 @@ describe("useSuspenseQuery", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const link = new MockSubscriptionLink();
     const client = new ApolloClient({ link, cache });
 
@@ -7848,7 +7848,7 @@ describe("useSuspenseQuery", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const link = new MockSubscriptionLink();
     const client = new ApolloClient({ link, cache });
 
@@ -7977,7 +7977,7 @@ describe("useSuspenseQuery", () => {
       }
     `;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -8259,7 +8259,7 @@ describe("useSuspenseQuery", () => {
         }
       `;
 
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -9138,7 +9138,7 @@ describe("useSuspenseQuery", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const link = new MockSubscriptionLink();
     const client = new ApolloClient({ link, cache });
 
@@ -9548,7 +9548,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -9662,7 +9662,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -9804,7 +9804,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -9944,7 +9944,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -10052,7 +10052,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     // preloaded cache
@@ -10091,7 +10091,7 @@ describe("useSuspenseQuery", () => {
 
     const user = userEvent.setup();
     const client = new ApolloClient({
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -10288,7 +10288,7 @@ describe("useSuspenseQuery", () => {
 
     const client = new ApolloClient({
       link: new MockLink(mocks),
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -10465,7 +10465,7 @@ describe("useSuspenseQuery", () => {
 
     const user = userEvent.setup();
     const client = new ApolloClient({
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Query: {
             fields: {

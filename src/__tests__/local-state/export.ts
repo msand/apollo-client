@@ -5,8 +5,8 @@ import { Observable } from "../../utilities";
 import { itAsync } from "../../testing";
 import { ApolloLink } from "../../link/core";
 import { ApolloClient } from "../../core";
-import { InMemoryCache } from "../../cache";
 import { spyOnConsole } from "../../testing/internal";
+import { Hermes } from "apollo-cache-hermes";
 
 describe("@client @export tests", () => {
   itAsync(
@@ -19,7 +19,7 @@ describe("@client @export tests", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -52,7 +52,7 @@ describe("@client @export tests", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -100,7 +100,7 @@ describe("@client @export tests", () => {
       const testAuthorId = 100;
       const testPostCount = 200;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         resolvers: {
@@ -151,7 +151,7 @@ describe("@client @export tests", () => {
 
       const testPostCount = 200;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         resolvers: {
@@ -209,7 +209,7 @@ describe("@client @export tests", () => {
         })
       );
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link,
@@ -273,7 +273,7 @@ describe("@client @export tests", () => {
         })
       );
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link,
@@ -327,7 +327,7 @@ describe("@client @export tests", () => {
       );
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
         resolvers: {},
       });
@@ -380,7 +380,7 @@ describe("@client @export tests", () => {
         });
       }).setOnError(reject);
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link,
@@ -457,7 +457,7 @@ describe("@client @export tests", () => {
         });
       });
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link,
@@ -524,7 +524,7 @@ describe("@client @export tests", () => {
       });
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
         resolvers: {
           Mutation: {
@@ -574,7 +574,7 @@ describe("@client @export tests", () => {
         });
       });
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link,
@@ -654,7 +654,7 @@ describe("@client @export tests", () => {
         expect(print(request.query)).toBe(print(expectedServerQuery));
         return Observable.of({ data });
       }),
-      cache: new InMemoryCache({
+      cache: new Hermes({
         addTypename: true,
       }),
       resolvers: {
@@ -704,7 +704,7 @@ describe("@client @export tests", () => {
         });
       });
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link,
@@ -758,7 +758,7 @@ describe("@client @export tests", () => {
           })
         );
 
-        const cache = new InMemoryCache();
+        const cache = new Hermes();
         const client = new ApolloClient({
           cache,
           link,
@@ -827,7 +827,7 @@ describe("@client @export tests", () => {
           });
         });
 
-        const cache = new InMemoryCache();
+        const cache = new Hermes();
         const client = new ApolloClient({
           cache,
           link,
@@ -896,7 +896,7 @@ describe("@client @export tests", () => {
         });
       });
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link,
@@ -958,7 +958,7 @@ describe("@client @export tests", () => {
     "should update @client @export variables on each broadcast if they've " +
       "changed",
     (resolve, reject) => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const widgetCountQuery = gql`
         {

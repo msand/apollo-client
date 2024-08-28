@@ -11,8 +11,8 @@ import {
   DocumentNode,
 } from "../../../core";
 import { Cache } from "../../../cache";
-import { InMemoryCache } from "../inMemoryCache";
 import { InMemoryCacheConfig } from "../types";
+import { Hermes } from "apollo-cache-hermes";
 
 import { StoreReader } from "../readFromStore";
 import { StoreWriter } from "../writeToStore";
@@ -27,16 +27,16 @@ describe("Cache", () => {
   function itWithInitialData(
     message: string,
     initialDataForCaches: { [key: string]: any }[],
-    callback: (...caches: InMemoryCache[]) => any
+    callback: (...caches: Hermes[]) => any
   ) {
-    const cachesList: InMemoryCache[][] = [
+    const cachesList: Hermes[][] = [
       initialDataForCaches.map((data) =>
-        new InMemoryCache({
+        new Hermes({
           addTypename: false,
         }).restore(cloneDeep(data))
       ),
       initialDataForCaches.map((data) =>
-        new InMemoryCache({
+        new Hermes({
           addTypename: false,
           resultCaching: false,
         }).restore(cloneDeep(data))
@@ -52,15 +52,15 @@ describe("Cache", () => {
   function itWithCacheConfig(
     message: string,
     config: InMemoryCacheConfig,
-    callback: (cache: InMemoryCache) => any
+    callback: (cache: Hermes) => any
   ) {
     const caches = [
-      new InMemoryCache({
+      new Hermes({
         addTypename: false,
         ...config,
         resultCaching: true,
       }),
-      new InMemoryCache({
+      new Hermes({
         addTypename: false,
         ...config,
         resultCaching: false,
@@ -578,7 +578,7 @@ describe("Cache", () => {
     );
 
     it("should not accidentally depend on unrelated entity fields", () => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         resultCaching: true,
       });
 
@@ -712,7 +712,7 @@ describe("Cache", () => {
     });
 
     it("should not return null when ID found in optimistic layer", () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const fragment = gql`
         fragment NameFragment on Person {
@@ -823,7 +823,7 @@ describe("Cache", () => {
         `,
       });
 
-      expect((proxy as InMemoryCache).extract()).toEqual({
+      expect((proxy as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -840,7 +840,7 @@ describe("Cache", () => {
         `,
       });
 
-      expect((proxy as InMemoryCache).extract()).toEqual({
+      expect((proxy as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -860,7 +860,7 @@ describe("Cache", () => {
         `,
       });
 
-      expect((proxy as InMemoryCache).extract()).toEqual({
+      expect((proxy as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 4,
@@ -871,7 +871,7 @@ describe("Cache", () => {
     });
 
     it("will write some deeply nested data to the store", () => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -897,7 +897,7 @@ describe("Cache", () => {
         `,
       });
 
-      expect((cache as InMemoryCache).extract()).toEqual({
+      expect((cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -921,7 +921,7 @@ describe("Cache", () => {
         `,
       });
 
-      expect((cache as InMemoryCache).extract()).toEqual({
+      expect((cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -961,7 +961,7 @@ describe("Cache", () => {
         `,
       });
 
-      expect((cache as InMemoryCache).extract()).toEqual({
+      expect((cache as Hermes).extract()).toEqual({
         ROOT_QUERY: {
           __typename: "Query",
           a: 1,
@@ -1002,7 +1002,7 @@ describe("Cache", () => {
           },
         });
 
-        expect((proxy as InMemoryCache).extract()).toEqual({
+        expect((proxy as Hermes).extract()).toEqual({
           ROOT_QUERY: {
             __typename: "Query",
             'field({"literal":true,"value":42})': 1,
@@ -1033,7 +1033,7 @@ describe("Cache", () => {
           },
         });
 
-        expect((proxy as InMemoryCache).extract()).toEqual({
+        expect((proxy as Hermes).extract()).toEqual({
           ROOT_QUERY: {
             __typename: "Query",
             'field({"literal":true,"value":42})': 1,
@@ -1145,7 +1145,7 @@ describe("Cache", () => {
           `,
         });
 
-        expect((proxy as InMemoryCache).extract()).toMatchSnapshot();
+        expect((proxy as Hermes).extract()).toMatchSnapshot();
         proxy.writeFragment({
           data: { __typename: "Foo", f: 5, g: 6, h: { id: "bar", j: 8, k: 9 } },
           id: "foo",
@@ -1161,7 +1161,7 @@ describe("Cache", () => {
           `,
         });
 
-        expect((proxy as InMemoryCache).extract()).toMatchSnapshot();
+        expect((proxy as Hermes).extract()).toMatchSnapshot();
 
         proxy.writeFragment({
           data: { i: 10, __typename: "Bar" },
@@ -1173,7 +1173,7 @@ describe("Cache", () => {
           `,
         });
 
-        expect((proxy as InMemoryCache).extract()).toMatchSnapshot();
+        expect((proxy as Hermes).extract()).toMatchSnapshot();
 
         proxy.writeFragment({
           data: { j: 11, k: 12, __typename: "Bar" },
@@ -1186,7 +1186,7 @@ describe("Cache", () => {
           `,
         });
 
-        expect((proxy as InMemoryCache).extract()).toMatchSnapshot();
+        expect((proxy as Hermes).extract()).toMatchSnapshot();
 
         proxy.writeFragment({
           data: {
@@ -1218,7 +1218,7 @@ describe("Cache", () => {
           fragmentName: "fooFragment",
         });
 
-        expect((proxy as InMemoryCache).extract()).toMatchSnapshot();
+        expect((proxy as Hermes).extract()).toMatchSnapshot();
 
         proxy.writeFragment({
           data: { __typename: "Bar", i: 10, j: 11, k: 12 },
@@ -1244,7 +1244,7 @@ describe("Cache", () => {
           fragmentName: "barFragment",
         });
 
-        expect((proxy as InMemoryCache).extract()).toMatchSnapshot();
+        expect((proxy as Hermes).extract()).toMatchSnapshot();
       }
     );
 
@@ -1304,7 +1304,7 @@ describe("Cache", () => {
           },
         });
 
-        expect((proxy as InMemoryCache).extract()).toEqual({
+        expect((proxy as Hermes).extract()).toEqual({
           __META: {
             extraRootIds: ["foo"],
           },
@@ -1320,7 +1320,7 @@ describe("Cache", () => {
 
   describe("cache.updateQuery and cache.updateFragment", () => {
     it("should be batched", () => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Person: {
             keyFields: ["name"],
@@ -1489,7 +1489,7 @@ describe("Cache", () => {
 
   describe("cache.restore", () => {
     it("replaces cache.{store{Reader,Writer},maybeBroadcastWatch}", () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const query = gql`
         query {
           a
@@ -1546,7 +1546,7 @@ describe("Cache", () => {
   describe("cache.batch", () => {
     const last = <E>(array: E[]) => array[array.length - 1];
 
-    function watch(cache: InMemoryCache, query: DocumentNode) {
+    function watch(cache: Hermes, query: DocumentNode) {
       const options: Cache.WatchOptions = {
         query,
         optimistic: true,
@@ -1562,7 +1562,7 @@ describe("Cache", () => {
     }
 
     it("calls onWatchUpdated for each invalidated watch", () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const aQuery = gql`
         query {
@@ -1683,7 +1683,7 @@ describe("Cache", () => {
     });
 
     it("works with cache.modify and INVALIDATE", () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const aQuery = gql`
         query {
@@ -1750,7 +1750,7 @@ describe("Cache", () => {
     });
 
     it("does not pass previously invalidated queries to onWatchUpdated", () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const aQuery = gql`
         query {
@@ -1896,7 +1896,7 @@ describe("Cache", () => {
     });
 
     it("returns options.update result for optimistic and non-optimistic batches", () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const expected = Symbol.for("expected");
 
       expect(
@@ -2121,7 +2121,7 @@ describe("Cache", () => {
 
 describe("resultCacheMaxSize", () => {
   it("uses default max size on caches if resultCacheMaxSize is not configured", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     expect(cache["maybeBroadcastWatch"].options.max).toBe(
       defaultCacheSizes["inMemoryCache.maybeBroadcastWatch"]
     );
@@ -2135,7 +2135,7 @@ describe("resultCacheMaxSize", () => {
 
   it("configures max size on caches when resultCacheMaxSize is set", () => {
     const resultCacheMaxSize = 12345;
-    const cache = new InMemoryCache({ resultCacheMaxSize });
+    const cache = new Hermes({ resultCacheMaxSize });
     expect(cache["maybeBroadcastWatch"].options.max).toBe(resultCacheMaxSize);
     expect(cache["storeReader"]["executeSelectionSet"].options.max).toBe(
       resultCacheMaxSize
@@ -2146,9 +2146,9 @@ describe("resultCacheMaxSize", () => {
   });
 });
 
-describe("InMemoryCache#broadcastWatches", function () {
+describe("Hermes#broadcastWatches", function () {
   it("should keep distinct consumers distinct (issue #5733)", function () {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const query = gql`
       query {
         value(arg: $arg) {
@@ -2303,12 +2303,12 @@ describe("InMemoryCache#broadcastWatches", function () {
       },
     };
 
-    const canonicalCache = new InMemoryCache({
+    const canonicalCache = new Hermes({
       canonizeResults: true,
       typePolicies,
     });
 
-    const nonCanonicalCache = new InMemoryCache({
+    const nonCanonicalCache = new Hermes({
       canonizeResults: false,
       typePolicies,
     });
@@ -2456,9 +2456,9 @@ describe("InMemoryCache#broadcastWatches", function () {
   });
 });
 
-describe("InMemoryCache#modify", () => {
+describe("Hermes#modify", () => {
   it("should work with single modifier function", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const query = gql`
       query {
         a
@@ -2508,7 +2508,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("should work with multiple modifier functions", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const query = gql`
       query {
         a
@@ -2562,7 +2562,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("should allow invalidation using details.INVALIDATE", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       canonizeResults: true,
       typePolicies: {
         Book: {
@@ -2663,7 +2663,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("should allow deletion using details.DELETE", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Book: {
           keyFields: ["isbn"],
@@ -2860,7 +2860,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("can remove specific items from paginated lists", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Thread: {
           keyFields: ["tid"],
@@ -3028,7 +3028,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("should not revisit deleted fields", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const query = gql`
       query {
         a
@@ -3082,7 +3082,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("should broadcast watches for queries with changed fields", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const queryA = gql`
       {
         a {
@@ -3226,7 +3226,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("should handle argument-determined field identities", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -3419,7 +3419,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("should modify ROOT_QUERY only when options.id absent", function () {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query: gql`
@@ -3462,7 +3462,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("warns if `modify` returns a mixed array of objects and references", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const query = gql`
       query {
         me {
@@ -3524,7 +3524,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("warns if `modify` returns a Reference that is not part of the store as part of an array", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const query = gql`
       query {
         me {
@@ -3615,7 +3615,7 @@ describe("InMemoryCache#modify", () => {
   });
 
   it("warns if `modify` returns a Reference that is not part of the store", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const query = gql`
       query {
         me {
@@ -3684,7 +3684,7 @@ describe("InMemoryCache#modify", () => {
 describe("ReactiveVar and makeVar", () => {
   function makeCacheAndVar(resultCaching: boolean) {
     const nameVar = makeVar("Ben");
-    const cache: InMemoryCache = new InMemoryCache({
+    const cache: Hermes = new Hermes({
       resultCaching,
       typePolicies: {
         Person: {
@@ -4018,7 +4018,7 @@ describe("ReactiveVar and makeVar", () => {
 
   it("should broadcast only once for multiple reads of same variable", () => {
     const nameVar = makeVar("Ben");
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -4118,7 +4118,7 @@ describe("ReactiveVar and makeVar", () => {
 
   it("should broadcast to manually added caches", () => {
     const rv = makeVar(0);
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     const query = gql`
       query {
         value
@@ -4300,7 +4300,7 @@ describe("TypedDocumentNode<Data, Variables>", () => {
   };
 
   function getBookCache() {
-    return new InMemoryCache({
+    return new Hermes({
       typePolicies: {
         Query: {
           fields: {

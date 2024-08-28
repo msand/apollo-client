@@ -14,7 +14,7 @@ import {
   WatchQueryFetchPolicy,
   WatchQueryOptions,
 } from "../../../core";
-import { InMemoryCache } from "../../../cache";
+import { Hermes } from "apollo-cache-hermes";
 import { ApolloProvider } from "../../context";
 import { Observable, Reference, concatPagination } from "../../../utilities";
 import { ApolloLink } from "../../../link/core";
@@ -227,7 +227,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -266,7 +266,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -303,7 +303,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -331,7 +331,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -365,7 +365,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -418,7 +418,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -478,7 +478,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -554,7 +554,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       let setName: any;
       const { result } = renderHook(
         () => {
@@ -697,7 +697,7 @@ describe("useQuery Hook", () => {
       `;
       const client = new ApolloClient({
         link: new ApolloLink(() => Observable.of({ data: { hello: "world" } })),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const wrapper = ({ children }: any) => (
@@ -788,7 +788,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
       const ProfiledHook = profileHook(() => [
         useQuery(query1, { fetchPolicy: "no-cache" }),
@@ -858,7 +858,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const { result, rerender } = renderHook(
         ({ query }) => useQuery(query, { pollInterval: 10 }),
         {
@@ -891,7 +891,7 @@ describe("useQuery Hook", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const link = mockSingleLink({
         request: { query },
         result: { data: { hello: "from link" } },
@@ -940,7 +940,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       cache.writeQuery({
         query,
         data: { hello: "from cache" },
@@ -980,7 +980,7 @@ describe("useQuery Hook", () => {
         result: { data: { hello: "from link" } },
       });
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       cache.writeQuery({
         query,
         data: { hello: "from cache" },
@@ -1022,7 +1022,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         ssrMode: true,
       });
 
@@ -1059,7 +1059,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const fetchPolicyLog: (string | undefined)[] = [];
@@ -1130,7 +1130,7 @@ describe("useQuery Hook", () => {
             })
         ),
 
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
 
         defaultOptions: {
           watchQuery: {
@@ -1327,7 +1327,7 @@ describe("useQuery Hook", () => {
 
       let count = 0;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(
           (request) =>
             new Observable((observer) => {
@@ -1452,7 +1452,7 @@ describe("useQuery Hook", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
       ssrMode: true,
     });
 
@@ -1494,7 +1494,7 @@ describe("useQuery Hook", () => {
 
       let linkCount = 0;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(
           (request) =>
             new Observable((observer) => {
@@ -1620,7 +1620,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -1695,7 +1695,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const ProfiledUseQuery = profileHook(({ skip }: { skip?: boolean }) =>
         useQuery(query, { pollInterval: 10, skip })
       );
@@ -1760,7 +1760,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       cache.writeQuery({
         query,
         data: { hello: "world 2" },
@@ -1814,7 +1814,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const link = new MockLink(mocks);
       const requestSpy = jest.spyOn(link, "request");
@@ -1896,7 +1896,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const link = new MockLink(mocks);
       const requestSpy = jest.spyOn(link, "request");
@@ -1977,7 +1977,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const link = new MockLink(mocks);
       const requestSpy = jest.spyOn(link, "request");
       const onErrorFn = jest.fn();
@@ -2053,7 +2053,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const link = new MockLink(mocks);
       const requestSpy = jest.spyOn(link, "request");
@@ -2132,7 +2132,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const link = new MockLink(mocks);
       const requestSpy = jest.spyOn(link, "request");
       const onErrorFn = jest.fn();
@@ -2219,7 +2219,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2281,7 +2281,7 @@ describe("useQuery Hook", () => {
 
         const client = new ApolloClient({
           link,
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           defaultOptions: {
             watchQuery: {
               skipPollAttempt,
@@ -2372,7 +2372,7 @@ describe("useQuery Hook", () => {
           },
         ];
 
-        const cache = new InMemoryCache();
+        const cache = new Hermes();
         const wrapper = ({ children }: any) => (
           <MockedProvider mocks={mocks} cache={cache}>
             {children}
@@ -2460,7 +2460,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2496,7 +2496,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2545,7 +2545,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2601,7 +2601,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2647,7 +2647,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2692,7 +2692,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2749,7 +2749,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2791,7 +2791,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2844,7 +2844,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2900,7 +2900,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -2947,7 +2947,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -3015,7 +3015,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -3083,7 +3083,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -3367,7 +3367,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const link = new MockLink(mocks);
       const onErrorFn = jest.fn();
       link.setOnError(onErrorFn);
@@ -3534,7 +3534,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -3605,7 +3605,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -3677,7 +3677,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -3954,7 +3954,7 @@ describe("useQuery Hook", () => {
     });
 
     it("fetchMore with concatPagination", async () => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -4000,7 +4000,7 @@ describe("useQuery Hook", () => {
     });
 
     it("fetchMore with concatPagination and notifyOnNetworkStatusChange", async () => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -4072,7 +4072,7 @@ describe("useQuery Hook", () => {
         });
       });
 
-      const client = new ApolloClient({ cache: new InMemoryCache(), link });
+      const client = new ApolloClient({ cache: new Hermes(), link });
 
       const ProfiledHook = profileHook(() =>
         useQuery(query, { fetchPolicy: "no-cache", variables: { limit: 2 } })
@@ -4109,7 +4109,7 @@ describe("useQuery Hook", () => {
     it("uses updateQuery to update the result of the query with no-cache queries", async () => {
       const { query, link } = setupPaginatedCase();
 
-      const client = new ApolloClient({ cache: new InMemoryCache(), link });
+      const client = new ApolloClient({ cache: new Hermes(), link });
 
       const ProfiledHook = profileHook(() =>
         useQuery(query, {
@@ -4274,7 +4274,7 @@ describe("useQuery Hook", () => {
     it("throws when using fetchMore without updateQuery for no-cache queries", async () => {
       const { query, link } = setupPaginatedCase();
 
-      const client = new ApolloClient({ cache: new InMemoryCache(), link });
+      const client = new ApolloClient({ cache: new Hermes(), link });
 
       const ProfiledHook = profileHook(() =>
         useQuery(query, { fetchPolicy: "no-cache", variables: { limit: 2 } })
@@ -4315,7 +4315,7 @@ describe("useQuery Hook", () => {
         });
       });
 
-      const client = new ApolloClient({ cache: new InMemoryCache(), link });
+      const client = new ApolloClient({ cache: new Hermes(), link });
 
       const ProfiledHook = profileHook(() =>
         useQuery(query, { fetchPolicy: "no-cache", variables: { limit: 2 } })
@@ -4345,7 +4345,7 @@ describe("useQuery Hook", () => {
     });
 
     it("regression test for issue #8600", async () => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Country: {
             fields: {
@@ -4509,7 +4509,7 @@ describe("useQuery Hook", () => {
           delay: 20,
         },
       ]),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -4776,7 +4776,7 @@ describe("useQuery Hook", () => {
           delay: 20,
         },
       ]),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -5000,7 +5000,7 @@ describe("useQuery Hook", () => {
           delay: 20,
         },
       ]),
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
 
     function App() {
@@ -5156,7 +5156,7 @@ describe("useQuery Hook", () => {
           delay: 20,
         },
       ]),
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Author: {
             fields: {
@@ -5315,7 +5315,7 @@ describe("useQuery Hook", () => {
           delay: 20,
         },
       ]),
-      cache: new InMemoryCache({
+      cache: new Hermes({
         typePolicies: {
           Author: {
             fields: {
@@ -5448,7 +5448,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -5509,7 +5509,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const ProfiledHook = profileHook(() =>
         useQuery(query, {
@@ -5602,7 +5602,7 @@ describe("useQuery Hook", () => {
 
       it('should support explicit "overwrite"', async () => {
         const mergeParams: [any, any][] = [];
-        const cache = new InMemoryCache({
+        const cache = new Hermes({
           typePolicies: {
             Query: {
               fields: {
@@ -5695,7 +5695,7 @@ describe("useQuery Hook", () => {
 
       it('should support explicit "merge"', async () => {
         const mergeParams: [any, any][] = [];
-        const cache = new InMemoryCache({
+        const cache = new Hermes({
           typePolicies: {
             Query: {
               fields: {
@@ -5799,7 +5799,7 @@ describe("useQuery Hook", () => {
 
       it('should assume default refetchWritePolicy value is "overwrite"', async () => {
         const mergeParams: [any, any][] = [];
-        const cache = new InMemoryCache({
+        const cache = new Hermes({
           typePolicies: {
             Query: {
               fields: {
@@ -6025,7 +6025,7 @@ describe("useQuery Hook", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       cache.writeQuery({
         query,
         data: { hello: "world" },
@@ -6087,7 +6087,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -6138,7 +6138,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -6185,7 +6185,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -6249,7 +6249,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const onCompleted = jest.fn();
       const { result } = renderHook(
         () =>
@@ -6320,7 +6320,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const onCompleted = jest.fn();
       const ProfiledHook = profileHook(() =>
         useQuery(query, {
@@ -6383,7 +6383,7 @@ describe("useQuery Hook", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       cache.writeQuery({
         query,
         data: { hello: "world" },
@@ -6436,7 +6436,7 @@ describe("useQuery Hook", () => {
         },
       ];
       const link = new MockLink(mocks);
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const onCompleted = jest.fn();
 
       const ChildComponent: React.FC = () => {
@@ -6499,7 +6499,7 @@ describe("useQuery Hook", () => {
         },
       ];
       const link = new MockLink(mocks);
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const onCompleted = jest.fn();
 
       const ChildComponent: React.FC = () => {
@@ -6608,7 +6608,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -6732,7 +6732,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(
@@ -6801,7 +6801,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(
@@ -6871,7 +6871,7 @@ describe("useQuery Hook", () => {
       const client = new ApolloClient({
         link,
         // THIS LINE IS THE ONLY DIFFERENCE FOR THIS TEST
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const wrapper = ({ children }: any) => (
@@ -6946,7 +6946,7 @@ describe("useQuery Hook", () => {
       `;
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(() => Observable.of({ data: {} })),
         resolvers: {
           ClientData: {
@@ -7071,7 +7071,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -7107,7 +7107,7 @@ describe("useQuery Hook", () => {
       }).concat(mockSingleLink(...mocks));
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const wrapper = ({ children }: any) => (
@@ -7139,7 +7139,7 @@ describe("useQuery Hook", () => {
     it("should tear down the query if `skip` is `true`", async () => {
       const client = new ApolloClient({
         link: new ApolloLink(() => Observable.of({ data: { hello: "world" } })),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const wrapper = ({ children }: any) => (
@@ -7217,7 +7217,7 @@ describe("useQuery Hook", () => {
 
       const requestSpy = jest.spyOn(link, "request");
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
       });
 
@@ -7270,7 +7270,7 @@ describe("useQuery Hook", () => {
       );
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
       });
 
@@ -7389,7 +7389,7 @@ describe("useQuery Hook", () => {
       ]);
 
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link,
       });
 
@@ -7530,7 +7530,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -7569,7 +7569,7 @@ describe("useQuery Hook", () => {
     });
 
     it("should return partial cache data when `returnPartialData` is true", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -7646,7 +7646,7 @@ describe("useQuery Hook", () => {
     });
 
     it("should not return partial cache data when `returnPartialData` is false", () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -7711,7 +7711,7 @@ describe("useQuery Hook", () => {
     });
 
     it("should not return partial cache data when `returnPartialData` is false and new variables are passed in", async () => {
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link: ApolloLink.empty(),
@@ -7837,7 +7837,7 @@ describe("useQuery Hook", () => {
         { request: { query }, result: { data: data2 }, delay: 10 },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -7937,7 +7937,7 @@ describe("useQuery Hook", () => {
         },
       ];
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider mocks={mocks} cache={cache}>
           {children}
@@ -8017,7 +8017,7 @@ describe("useQuery Hook", () => {
       let stringOfAs = "";
       let countOfBs = 0;
       const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(
           (request) =>
             new Observable((observer) => {
@@ -8298,7 +8298,7 @@ describe("useQuery Hook", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const wrapper = ({ children }: any) => (
         <MockedProvider link={link} cache={cache}>
           {children}
@@ -8376,7 +8376,7 @@ describe("useQuery Hook", () => {
           hello
         }
       `;
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const link = mockSingleLink(
         {
           request: { query },
@@ -8454,7 +8454,7 @@ describe("useQuery Hook", () => {
 
   describe("canonical cache results", () => {
     it("can be disabled via useQuery options", async () => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         canonizeResults: true,
         typePolicies: {
           Result: {
@@ -8548,7 +8548,7 @@ describe("useQuery Hook", () => {
 
   describe("canonical cache results", () => {
     it("can be disabled via useQuery options", async () => {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         canonizeResults: true,
         typePolicies: {
           Result: {
@@ -8686,7 +8686,7 @@ describe("useQuery Hook", () => {
 
     function makeClient() {
       return new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         link: new ApolloLink(
           (operation) =>
             new Observable((observer) => {
@@ -8841,7 +8841,7 @@ describe("useQuery Hook", () => {
         });
       });
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const client = new ApolloClient({
         link,
@@ -8920,7 +8920,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(() => useQuery(query), {
@@ -9020,7 +9020,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(() => useQuery(query), {
@@ -9168,7 +9168,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(() => useQuery(query), {
@@ -9320,7 +9320,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(
@@ -9429,7 +9429,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(() => useQuery(query), {
@@ -9581,7 +9581,7 @@ describe("useQuery Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(
@@ -9759,7 +9759,7 @@ describe("useQuery Hook", () => {
       `;
 
       const link = new MockSubscriptionLink();
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({ cache, link });
 
       cache.writeQuery({
@@ -9881,7 +9881,7 @@ describe("useQuery Hook", () => {
         }
       `;
 
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const link = new MockSubscriptionLink();
       const client = new ApolloClient({ cache, link });
 
@@ -10044,7 +10044,7 @@ describe("useQuery Hook", () => {
         const requestSpy = jest.spyOn(link, "request");
 
         const client = new ApolloClient({
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           link,
         });
         if (initialQueryValue) {
@@ -10094,7 +10094,7 @@ describe("useQuery Hook", () => {
     link.onSetup(() => requests++);
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache(),
+      cache: new Hermes(),
     });
     const ProfiledHook = profileHook(() => useQuery(query));
     render(<ProfiledHook />, {

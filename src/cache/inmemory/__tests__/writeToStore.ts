@@ -22,7 +22,7 @@ import {
 import { itAsync } from "../../../testing/core";
 import { StoreWriter } from "../writeToStore";
 import { defaultNormalizedCacheFactory, writeQueryToStore } from "./helpers";
-import { InMemoryCache } from "../inMemoryCache";
+import { Hermes } from "apollo-cache-hermes";
 import { TypedDocumentNode } from "../../../core";
 import { extractFragmentContext } from "../helpers";
 import { KeyFieldsFunction } from "../policies";
@@ -35,7 +35,7 @@ const getIdField: KeyFieldsFunction = ({ id }) => {
 };
 
 describe("writing to the store", () => {
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     dataIdFromObject(object: any) {
       if (object.__typename && object.id) {
         return object.__typename + "__" + object.id;
@@ -296,7 +296,7 @@ describe("writing to the store", () => {
     };
 
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         dataIdFromObject: getIdField,
       })
     );
@@ -437,7 +437,7 @@ describe("writing to the store", () => {
     };
 
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         dataIdFromObject: getIdField,
       })
     );
@@ -493,7 +493,7 @@ describe("writing to the store", () => {
     };
 
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         dataIdFromObject: getIdField,
       })
     );
@@ -625,7 +625,7 @@ describe("writing to the store", () => {
     };
 
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         dataIdFromObject: getIdField,
       })
     );
@@ -693,7 +693,7 @@ describe("writing to the store", () => {
       }
     `;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       // No keyFields type policy or dataIdFromObject, so we're using/testing
       // the default implementation, defaultDataIdFromObject.
     });
@@ -791,7 +791,7 @@ describe("writing to the store", () => {
       }
     `;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       // No keyFields type policy or dataIdFromObject, so we're using/testing
       // the default implementation, defaultDataIdFromObject.
     });
@@ -901,7 +901,7 @@ describe("writing to the store", () => {
     };
 
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         dataIdFromObject: getIdField,
       })
     );
@@ -975,7 +975,7 @@ describe("writing to the store", () => {
     };
 
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         dataIdFromObject: getIdField,
       })
     );
@@ -1052,7 +1052,7 @@ describe("writing to the store", () => {
     };
 
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         dataIdFromObject: getIdField,
       })
     );
@@ -1103,7 +1103,7 @@ describe("writing to the store", () => {
     };
 
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         dataIdFromObject: getIdField,
       })
     );
@@ -1363,7 +1363,7 @@ describe("writing to the store", () => {
     mutation.definitions.map((def) => {
       if (isOperationDefinition(def)) {
         const writer = new StoreWriter(
-          new InMemoryCache({
+          new Hermes({
             dataIdFromObject() {
               return "5";
             },
@@ -1540,7 +1540,7 @@ describe("writing to the store", () => {
       }
     `;
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Query: {
           fields: {
@@ -1614,7 +1614,7 @@ describe("writing to the store", () => {
   });
 
   it("correctly merges fragment fields along multiple paths", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Container: {
           // Uncommenting this line fixes the test, but should not be necessary,
@@ -1696,7 +1696,7 @@ describe("writing to the store", () => {
   });
 
   it("regression test for issue #8600", () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Country: {
           fields: {
@@ -1850,7 +1850,7 @@ describe("writing to the store", () => {
       },
     };
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       possibleTypes: { AShared: ["AType"] },
     });
 
@@ -1895,7 +1895,7 @@ describe("writing to the store", () => {
       `;
 
       let mergeCount = 0;
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -2050,7 +2050,7 @@ describe("writing to the store", () => {
   describe('"Cache data may be lost..." warnings', () => {
     it('should warn "Cache data may be lost..." message', () => {
       using _consoleSpy = spyOnConsole.takeSnapshots("warn");
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const query = gql`
         query {
@@ -2086,7 +2086,7 @@ describe("writing to the store", () => {
 
     it("should not warn when scalar fields are updated", () => {
       using _consoleSpy = spyOnConsole.takeSnapshots("warn");
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
 
       const query = gql`
         query {
@@ -2151,7 +2151,7 @@ describe("writing to the store", () => {
       };
 
       const writer = new StoreWriter(
-        new InMemoryCache({
+        new Hermes({
           dataIdFromObject: getIdField,
         })
       );
@@ -2177,7 +2177,7 @@ describe("writing to the store", () => {
       };
 
       const writer = new StoreWriter(
-        new InMemoryCache({
+        new Hermes({
           dataIdFromObject: getIdField,
           possibleTypes: {},
         })
@@ -2227,7 +2227,7 @@ describe("writing to the store", () => {
       };
 
       const writer = new StoreWriter(
-        new InMemoryCache({
+        new Hermes({
           dataIdFromObject: getIdField,
           possibleTypes: {
             Todo: ["ShoppingCartItem", "TaskItem"],
@@ -2254,7 +2254,7 @@ describe("writing to the store", () => {
       };
 
       const writer = new StoreWriter(
-        new InMemoryCache({
+        new Hermes({
           dataIdFromObject: getIdField,
           possibleTypes: {},
         })
@@ -2273,7 +2273,7 @@ describe("writing to the store", () => {
       };
 
       const writer = new StoreWriter(
-        new InMemoryCache({
+        new Hermes({
           dataIdFromObject: getIdField,
         })
       );
@@ -2303,7 +2303,7 @@ describe("writing to the store", () => {
       };
 
       const writer = new StoreWriter(
-        new InMemoryCache({
+        new Hermes({
           dataIdFromObject: getIdField,
         })
       );
@@ -2377,7 +2377,7 @@ describe("writing to the store", () => {
   it("can use keyArgs function instead of @connection directive", () => {
     const store = defaultNormalizedCacheFactory();
     const writer = new StoreWriter(
-      new InMemoryCache({
+      new Hermes({
         typePolicies: {
           Query: {
             fields: {
@@ -2619,7 +2619,7 @@ describe("writing to the store", () => {
       merged: Reference;
     }> = [];
 
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Account: {
           merge(existing, incoming, { mergeObjects }) {
@@ -2785,7 +2785,7 @@ describe("writing to the store", () => {
       },
     };
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     cache.writeQuery({
       query,
@@ -2806,7 +2806,7 @@ describe("writing to the store", () => {
   });
 
   it("should skip writing still-fresh result objects", function () {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Todo: {
           fields: {
@@ -2891,7 +2891,7 @@ describe("writing to the store", () => {
   itAsync(
     "should allow silencing broadcast of cache updates",
     function (resolve, reject) {
-      const cache = new InMemoryCache({
+      const cache = new Hermes({
         typePolicies: {
           Counter: {
             // Counter is a singleton, but we want to be able to test
@@ -3022,7 +3022,7 @@ describe("writing to the store", () => {
   );
 
   it("writeFragment should be able to infer ROOT_QUERY", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     const ref = cache.writeFragment({
       fragment: gql`
@@ -3048,7 +3048,7 @@ describe("writing to the store", () => {
   });
 
   it("should warn if it cannot identify the result object", () => {
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
 
     expect(() => {
       cache.writeFragment({
@@ -3065,7 +3065,7 @@ describe("writing to the store", () => {
   });
 
   it('user objects should be able to have { __typename: "Subscription" }', () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Subscription: {
           keyFields: ["subId"],
@@ -3124,7 +3124,7 @@ describe("writing to the store", () => {
   });
 
   it('user objects should be able to have { __typename: "Mutation" }', () => {
-    const cache = new InMemoryCache({
+    const cache = new Hermes({
       typePolicies: {
         Mutation: {
           keyFields: ["gene", ["id"], "name"],
@@ -3189,7 +3189,7 @@ describe("writing to the store", () => {
   });
 
   describe("StoreWriter", () => {
-    const writer = new StoreWriter(new InMemoryCache());
+    const writer = new StoreWriter(new Hermes());
 
     function check(
       query: TypedDocumentNode<{
@@ -3962,7 +3962,7 @@ describe("writing to the store", () => {
       }
     `;
 
-    const cache = new InMemoryCache();
+    const cache = new Hermes();
     cache.writeFragment({
       fragment: postFragment,
       data: {

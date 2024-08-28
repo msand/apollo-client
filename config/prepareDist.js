@@ -15,7 +15,7 @@ const fs = require("fs");
 const path = require("path");
 const recast = require("recast");
 
-const distRoot = `${__dirname}/../dist`;
+const distRoot = `${__dirname}/../dist/apollo-client/src`;
 
 /* @apollo/client */
 
@@ -61,7 +61,7 @@ fs.writeFileSync(`${distRoot}/package.json`, distPackageJson);
 
 // Copy supporting files into "dist"
 const srcDir = `${__dirname}/..`;
-const destDir = `${srcDir}/dist`;
+const destDir = `${srcDir}/dist/apollo-client/src`;
 fs.copyFileSync(`${srcDir}/README.md`, `${destDir}/README.md`);
 fs.copyFileSync(`${srcDir}/LICENSE`, `${destDir}/LICENSE`);
 

@@ -1,9 +1,5 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  InMemoryCache,
-  Observable,
-} from "../../../../core";
+import { ApolloClient, ApolloLink, Observable } from "../../../../core";
+import { Hermes } from "apollo-cache-hermes";
 import { setupSimpleCase } from "../../../../testing/internal";
 import {
   InternalQueryReference,
@@ -18,7 +14,7 @@ test("kicks off request immediately when created", async () => {
   let fetchCount = 0;
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new ApolloLink((operation) => {
       fetchCount++;
       return Observable.of({ data: { greeting: "Hello" } });

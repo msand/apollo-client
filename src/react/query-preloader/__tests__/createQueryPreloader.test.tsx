@@ -4,12 +4,12 @@ import {
   ApolloClient,
   ApolloError,
   ApolloLink,
-  InMemoryCache,
   NetworkStatus,
   OperationVariables,
   TypedDocumentNode,
   gql,
 } from "../../../core";
+import { Hermes } from "apollo-cache-hermes";
 import {
   MockLink,
   MockSubscriptionLink,
@@ -38,7 +38,7 @@ import userEvent from "@testing-library/user-event";
 
 function createDefaultClient(mocks: MockedResponse[]) {
   return new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
   });
 }
@@ -184,7 +184,7 @@ test("Honors configured auto dispose timer on the client", async () => {
   jest.useFakeTimers();
   const { query, mocks } = setupSimpleCase();
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink(mocks),
     defaultOptions: {
       react: {
@@ -262,7 +262,7 @@ test("useReadQuery auto-resubscribes the query after its disposed", async () => 
     },
   });
   const user = userEvent.setup();
-  const client = new ApolloClient({ cache: new InMemoryCache(), link });
+  const client = new ApolloClient({ cache: new Hermes(), link });
   const preloadQuery = createQueryPreloader(client);
 
   const queryRef = preloadQuery(query);
@@ -455,7 +455,7 @@ test("useReadQuery handles auto-resubscribe with returnPartialData", async () =>
     },
   });
   const user = userEvent.setup();
-  const client = new ApolloClient({ cache: new InMemoryCache(), link });
+  const client = new ApolloClient({ cache: new Hermes(), link });
   const preloadQuery = createQueryPreloader(client);
 
   const queryRef = preloadQuery(query, {
@@ -716,7 +716,7 @@ test("useReadQuery handles auto-resubscribe on network-only fetch policy", async
     },
   });
   const user = userEvent.setup();
-  const client = new ApolloClient({ cache: new InMemoryCache(), link });
+  const client = new ApolloClient({ cache: new Hermes(), link });
   const preloadQuery = createQueryPreloader(client);
 
   const queryRef = preloadQuery(query, { fetchPolicy: "network-only" });
@@ -897,7 +897,7 @@ test("useReadQuery handles auto-resubscribe on cache-and-network fetch policy", 
     },
   });
   const user = userEvent.setup();
-  const client = new ApolloClient({ cache: new InMemoryCache(), link });
+  const client = new ApolloClient({ cache: new Hermes(), link });
   const preloadQuery = createQueryPreloader(client);
 
   const queryRef = preloadQuery(query, { fetchPolicy: "cache-and-network" });
@@ -1078,7 +1078,7 @@ test("useReadQuery handles auto-resubscribe on no-cache fetch policy", async () 
     },
   });
   const user = userEvent.setup();
-  const client = new ApolloClient({ cache: new InMemoryCache(), link });
+  const client = new ApolloClient({ cache: new Hermes(), link });
   const preloadQuery = createQueryPreloader(client);
 
   const queryRef = preloadQuery(query, { fetchPolicy: "no-cache" });
@@ -1550,7 +1550,7 @@ test("passes context to the link", async () => {
   `;
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new ApolloLink((operation) => {
       return new Observable((observer) => {
         const { valueA, valueB } = operation.getContext();
@@ -1670,7 +1670,7 @@ test('enables canonical results when canonizeResults is "true"', async () => {
     results: Result[];
   }
 
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     typePolicies: {
       Result: {
         keyFields: false,
@@ -1727,7 +1727,7 @@ test("can disable canonical results when the cache's canonizeResults setting is 
     value: number;
   }
 
-  const cache = new InMemoryCache({
+  const cache = new Hermes({
     canonizeResults: true,
     typePolicies: {
       Result: {
@@ -1793,7 +1793,7 @@ test("suspends deferred queries until initial chunk loads then rerenders with de
   `;
 
   const link = new MockSubscriptionLink();
-  const client = new ApolloClient({ cache: new InMemoryCache(), link });
+  const client = new ApolloClient({ cache: new Hermes(), link });
 
   const preloadQuery = createQueryPreloader(client);
   const queryRef = preloadQuery(query);
@@ -1862,7 +1862,7 @@ test("suspends deferred queries until initial chunk loads then rerenders with de
 
 describe.skip("type tests", () => {
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
     link: new MockLink([]),
   });
   const preloadQuery = createQueryPreloader(client);

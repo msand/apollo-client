@@ -17,8 +17,9 @@ import {
   removeDirectivesFromDocument,
 } from "../../utilities";
 import { ApolloLink, FetchResult } from "../../link/core";
-import { InMemoryCache, NormalizedCacheObject } from "../../cache";
+import { NormalizedCacheObject } from "../../cache";
 import { ApolloError } from "../../errors";
+import { Hermes } from "apollo-cache-hermes";
 
 import {
   itAsync,
@@ -105,7 +106,7 @@ describe("ObservableQuery", () => {
       getDefaultOptionsForQueryManagerTests({
         link,
         assumeImmutableResults: true,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           addTypename: false,
         }),
       })
@@ -1101,7 +1102,7 @@ describe("ObservableQuery", () => {
       const observers: SubscriptionObserver<FetchResult<typeof dataOne>>[] = [];
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           link: new ApolloLink((operation, forward) => {
             return new Observable((observer) => {
               observers.push(observer);
@@ -1138,7 +1139,7 @@ describe("ObservableQuery", () => {
       const observers: SubscriptionObserver<FetchResult<typeof dataOne>>[] = [];
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           link: new ApolloLink((operation, forward) => {
             return new Observable((observer) => {
               observers.push(observer);
@@ -1482,7 +1483,7 @@ describe("ObservableQuery", () => {
 
         const client = new ApolloClient({
           link: new ApolloLink((request) => linkObservable),
-          cache: new InMemoryCache(),
+          cache: new Hermes(),
           resolvers: {
             Query: {
               counter() {
@@ -1712,7 +1713,7 @@ describe("ObservableQuery", () => {
           const firstRequest = mocks[0].request;
           const queryManager = new QueryManager(
             getDefaultOptionsForQueryManagerTests({
-              cache: new InMemoryCache({ addTypename: false }),
+              cache: new Hermes({ addTypename: false }),
               link: new MockLink(mocks, true, { showWarnings: false }),
             })
           );
@@ -1952,7 +1953,7 @@ describe("ObservableQuery", () => {
 
         const client = new ApolloClient({
           link: ni,
-          cache: new InMemoryCache({
+          cache: new Hermes({
             possibleTypes: {
               Creature: ["Pet"],
               Pet: ["Dog", "Cat"],
@@ -2423,7 +2424,7 @@ describe("ObservableQuery", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const obs = client.watchQuery({ query });
@@ -2750,7 +2751,7 @@ describe("ObservableQuery", () => {
               observer = o;
             });
           });
-          const cache = new InMemoryCache({});
+          const cache = new Hermes({});
           cache.writeQuery({ query, data: cacheValues.initial });
 
           const queryManager = new QueryManager(
@@ -2911,7 +2912,7 @@ describe("ObservableQuery", () => {
           assumeImmutableResults = true,
           assertFrozenResults = false,
         }) {
-          const cache = new InMemoryCache();
+          const cache = new Hermes();
           const client = new ApolloClient({
             link: mockSingleLink(
               { request: queryOptions, result: { data: { value: 1 } } },
@@ -2961,7 +2962,7 @@ describe("ObservableQuery", () => {
             await check({
               assumeImmutableResults,
               // No matter what value we provide for assumeImmutableResults, if we
-              // tell the InMemoryCache to deep-freeze its results, destructive
+              // tell the Hermes to deep-freeze its results, destructive
               // modifications of the result objects will become fatal. Once you
               // start enforcing immutability in this way, you might as well pass
               // assumeImmutableResults: true, to prevent calling cloneDeep.
@@ -3045,7 +3046,7 @@ describe("ObservableQuery", () => {
 
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const observable = client.watchQuery({ query });
@@ -3071,7 +3072,7 @@ describe("ObservableQuery", () => {
 
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const observable = client.watchQuery({ query });
@@ -3099,7 +3100,7 @@ describe("ObservableQuery", () => {
 
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const observable = client.watchQuery({ query });
@@ -3141,7 +3142,7 @@ describe("ObservableQuery", () => {
 
       const client = new ApolloClient({
         link: ApolloLink.empty(),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
         documentTransform,
       });
 
@@ -3288,7 +3289,7 @@ test("regression test for #10587", async () => {
   });
 
   const client = new ApolloClient({
-    cache: new InMemoryCache({
+    cache: new Hermes({
       typePolicies: {
         SchemaType: {
           merge: true,
@@ -3459,7 +3460,7 @@ test("handles changing variables in rapid succession before other request is com
 
   const client = new ApolloClient({
     link: new MockLink(mocks),
-    cache: new InMemoryCache(),
+    cache: new Hermes(),
   });
 
   const observable = client.watchQuery<UserCountQuery, UserCountVariables>({

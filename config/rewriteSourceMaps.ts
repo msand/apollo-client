@@ -1,12 +1,12 @@
 import * as fs from "fs";
 import * as path from "path";
-import { distDir } from "./helpers.ts";
-import glob = require("glob");
+import { distDir } from "./helpers";
+import glob from "glob";
 
 glob(`${distDir.replace(/\\/g, "/")}/**/*.js.map`, (error, files) => {
   if (error) throw error;
 
-  const rootDir = path.dirname(distDir);
+  const rootDir = path.dirname(path.resolve(__dirname, "..", ".."));
 
   const startTime = Date.now();
   let rewriteCount = 0;

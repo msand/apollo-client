@@ -1,9 +1,9 @@
-import type { QueryManagerOptions } from "../../../core/QueryManager.js";
-import { QueryManager } from "../../../core/QueryManager.js";
-import type { MockedResponse } from "./mockLink.js";
-import { mockSingleLink } from "./mockLink.js";
-import { InMemoryCache } from "../../../cache/index.js";
-import { LocalState } from "../../../core/LocalState.js";
+import type { QueryManagerOptions } from "../../../core/QueryManager";
+import { QueryManager } from "../../../core/QueryManager";
+import type { MockedResponse } from "./mockLink";
+import { mockSingleLink } from "./mockLink";
+import { LocalState } from "../../../core/LocalState";
+import { Hermes } from "apollo-cache-hermes";
 
 export const getDefaultOptionsForQueryManagerTests = <TStore>(
   options: Pick<QueryManagerOptions<TStore>, "cache" | "link"> &
@@ -27,7 +27,7 @@ export default (...mockedResponses: MockedResponse[]) => {
   return new QueryManager(
     getDefaultOptionsForQueryManagerTests({
       link: mockSingleLink(...mockedResponses),
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     })
   );
 };

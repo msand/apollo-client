@@ -17,7 +17,7 @@ import {
   ObservableQuery,
   TypedDocumentNode,
 } from "../../../core";
-import { InMemoryCache } from "../../../cache";
+import { Hermes } from "apollo-cache-hermes";
 import {
   itAsync,
   MockedProvider,
@@ -593,7 +593,7 @@ describe("useMutation Hook", () => {
       });
 
       const link = mockSingleLink();
-      const cache = new InMemoryCache();
+      const cache = new Hermes();
       const client = new ApolloClient({
         cache,
         link,
@@ -1235,7 +1235,7 @@ describe("useMutation Hook", () => {
       let timeMergeCount = 0;
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             MutationPayload: {
               fields: {
@@ -1346,7 +1346,7 @@ describe("useMutation Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             MutationPayload: {
               fields: {
@@ -1618,7 +1618,7 @@ describe("useMutation Hook", () => {
         ];
 
         const link = mockSingleLink(...mocks).setOnError(reject);
-        const cache = new InMemoryCache();
+        const cache = new Hermes();
         const client = new ApolloClient({
           cache,
           link,
@@ -1803,7 +1803,7 @@ describe("useMutation Hook", () => {
       };
 
       const client = new ApolloClient({
-        cache: new InMemoryCache({
+        cache: new Hermes({
           typePolicies: {
             Query: {
               fields: {
@@ -1956,7 +1956,7 @@ describe("useMutation Hook", () => {
       const link = mockSingleLink(...mocks);
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(
@@ -2033,7 +2033,7 @@ describe("useMutation Hook", () => {
       const link = mockSingleLink(...mocks);
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(
@@ -2116,7 +2116,7 @@ describe("useMutation Hook", () => {
       const link = mockSingleLink(...mocks);
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result, unmount } = renderHook(
@@ -2237,7 +2237,7 @@ describe("useMutation Hook", () => {
 
         const client = new ApolloClient({
           link,
-          cache: new InMemoryCache({
+          cache: new Hermes({
             typePolicies: {
               NumbersResult: {
                 fields: {
@@ -2552,7 +2552,7 @@ describe("useMutation Hook", () => {
           uri: "/graphql",
           batchMax: 10,
         }),
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       render(
@@ -2587,7 +2587,7 @@ describe("useMutation Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const useCreateTodo = () => {
@@ -2671,7 +2671,7 @@ describe("useMutation Hook", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const onError = jest.fn();
@@ -2745,7 +2745,7 @@ describe("useMutation Hook", () => {
       const update = jest.fn();
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache(),
+        cache: new Hermes(),
       });
 
       const { result } = renderHook(

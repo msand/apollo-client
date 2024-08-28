@@ -5,7 +5,7 @@
     "test": "mocha --exit -n expose-gc tests.js"
   },
   "dependencies": {
-    "@apollo/client": "file:../../dist",
+    "@apollo/client": "file:../../dist/apollo-client/src",
     "graphql": "^16.0.0"
   },
   "devDependencies": {

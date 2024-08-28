@@ -7,7 +7,7 @@ import fetchMock from "fetch-mock";
 import crypto from "crypto";
 
 import { ApolloProvider } from "../../../react/context";
-import { InMemoryCache as Cache } from "../../../cache/inmemory/inMemoryCache";
+import { Hermes as Cache } from "apollo-cache-hermes";
 import { ApolloClient } from "../../../core/ApolloClient";
 import { createHttpLink } from "../../http/createHttpLink";
 import { graphql } from "../../../react/hoc/graphql";

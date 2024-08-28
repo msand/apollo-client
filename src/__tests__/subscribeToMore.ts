@@ -2,9 +2,9 @@ import gql from "graphql-tag";
 import { DocumentNode, OperationDefinitionNode } from "graphql";
 
 import { ApolloClient } from "../core";
-import { InMemoryCache } from "../cache";
 import { ApolloLink, Operation } from "../link/core";
 import { itAsync, mockSingleLink, mockObservableLink } from "../testing";
+import { Hermes } from "apollo-cache-hermes";
 
 const isSub = (operation: Operation) =>
   (operation.query as DocumentNode).definitions
@@ -66,7 +66,7 @@ describe("subscribeToMore", () => {
     let counter = 0;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
       link,
     });
 
@@ -120,7 +120,7 @@ describe("subscribeToMore", () => {
 
     const client = new ApolloClient({
       link,
-      cache: new InMemoryCache({ addTypename: false }),
+      cache: new Hermes({ addTypename: false }),
     });
 
     const obsHandle = client.watchQuery<(typeof req1)["result"]["data"]>({
@@ -180,7 +180,7 @@ describe("subscribeToMore", () => {
 
       const client = new ApolloClient({
         link,
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
       });
 
       const obsHandle = client.watchQuery({
@@ -238,7 +238,7 @@ describe("subscribeToMore", () => {
     let counter = 0;
 
     const client = new ApolloClient({
-      cache: new InMemoryCache({ addTypename: false }).restore({
+      cache: new Hermes({ addTypename: false }).restore({
         ROOT_QUERY: {
           entry: [
             {
@@ -352,7 +352,7 @@ describe("subscribeToMore", () => {
       let counter = 0;
 
       const client = new ApolloClient({
-        cache: new InMemoryCache({ addTypename: false }),
+        cache: new Hermes({ addTypename: false }),
         link,
       });
 

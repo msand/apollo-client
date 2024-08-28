@@ -12,7 +12,7 @@ import { QueryManager } from "../../QueryManager";
 import { ObservableQuery } from "../../ObservableQuery";
 import { ObservableSubscription } from "../../../utilities";
 import { itAsync } from "../../../testing";
-import { InMemoryCache } from "../../../cache";
+import { Hermes } from "apollo-cache-hermes";
 
 // mocks
 import { MockSubscriptionLink } from "../../../testing/core";
@@ -43,7 +43,7 @@ describe("Subscription lifecycles", () => {
       const link = new MockSubscriptionLink();
       const queryManager = new QueryManager(
         getDefaultOptionsForQueryManagerTests({
-          cache: new InMemoryCache({ addTypename: false }),
+          cache: new Hermes({ addTypename: false }),
           link,
         })
       );
